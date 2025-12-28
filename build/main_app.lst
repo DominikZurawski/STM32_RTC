@@ -1,0 +1,1622 @@
+ARM GAS  /tmp/ccMmEYxw.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"main_app.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/main_app.c"
+  20              		.section	.text.printmsg,"ax",%progbits
+  21              		.align	1
+  22              		.global	printmsg
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	printmsg:
+  28              	.LVL0:
+  29              	.LFB135:
+   1:Core/Src/main_app.c **** /*
+   2:Core/Src/main_app.c ****  * main.c
+   3:Core/Src/main_app.c ****  *
+   4:Core/Src/main_app.c ****  *  Created on: 02-Jun-2018
+   5:Core/Src/main_app.c ****  *      Author: kiran
+   6:Core/Src/main_app.c ****  */
+   7:Core/Src/main_app.c **** 
+   8:Core/Src/main_app.c **** /* Includes ------------------------------------------------------------------*/
+   9:Core/Src/main_app.c **** #include <string.h>
+  10:Core/Src/main_app.c **** #include <stdio.h>
+  11:Core/Src/main_app.c **** #include <stdint.h>
+  12:Core/Src/main_app.c **** #include <stdarg.h>
+  13:Core/Src/main_app.c **** #include "stm32l4xx_hal.h"
+  14:Core/Src/main_app.c **** #include "main_app.h"
+  15:Core/Src/main_app.c **** 
+  16:Core/Src/main_app.c **** /* Private function prototypes -----------------------------------------------*/
+  17:Core/Src/main_app.c **** void GPIO_Init(void);
+  18:Core/Src/main_app.c **** void Error_handler(void);
+  19:Core/Src/main_app.c **** void UART2_Init(void);
+  20:Core/Src/main_app.c **** void SystemClock_Config_HSE(uint8_t clock_freq);
+  21:Core/Src/main_app.c **** void RTC_Init(void);
+  22:Core/Src/main_app.c **** void RTC_CalendarConfig(void);
+  23:Core/Src/main_app.c **** 
+  24:Core/Src/main_app.c **** /* Private variables ---------------------------------------------------------*/
+  25:Core/Src/main_app.c **** UART_HandleTypeDef huart2;
+  26:Core/Src/main_app.c **** RTC_HandleTypeDef hrtc;
+  27:Core/Src/main_app.c **** 
+  28:Core/Src/main_app.c **** /**
+  29:Core/Src/main_app.c ****   * @brief  Print a string to console over UART.
+ARM GAS  /tmp/ccMmEYxw.s 			page 2
+
+
+  30:Core/Src/main_app.c ****   * @param  format: Format string as in printf.
+  31:Core/Src/main_app.c ****   * @param  ...: Additional arguments providing the data to print.
+  32:Core/Src/main_app.c ****   * @retval None
+  33:Core/Src/main_app.c ****   */
+  34:Core/Src/main_app.c **** void printmsg(char *format,...)
+  35:Core/Src/main_app.c **** {
+  30              		.loc 1 35 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 4, pretend = 16, frame = 88
+  33              		@ frame_needed = 0, uses_anonymous_args = 1
+  34              		.loc 1 35 1 is_stmt 0 view .LVU1
+  35 0000 0FB4     		push	{r0, r1, r2, r3}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 0, -16
+  39              		.cfi_offset 1, -12
+  40              		.cfi_offset 2, -8
+  41              		.cfi_offset 3, -4
+  42 0002 10B5     		push	{r4, lr}
+  43              	.LCFI1:
+  44              		.cfi_def_cfa_offset 24
+  45              		.cfi_offset 4, -24
+  46              		.cfi_offset 14, -20
+  47 0004 96B0     		sub	sp, sp, #88
+  48              	.LCFI2:
+  49              		.cfi_def_cfa_offset 112
+  50 0006 18AA     		add	r2, sp, #96
+  51 0008 52F8041B 		ldr	r1, [r2], #4
+  36:Core/Src/main_app.c ****   char str[80];
+  52              		.loc 1 36 3 is_stmt 1 view .LVU2
+  37:Core/Src/main_app.c **** 
+  38:Core/Src/main_app.c ****   /*Extract the the argument list using VA apis */
+  39:Core/Src/main_app.c ****   va_list args;
+  53              		.loc 1 39 3 view .LVU3
+  40:Core/Src/main_app.c ****   va_start(args, format);
+  54              		.loc 1 40 3 view .LVU4
+  55 000c 0192     		str	r2, [sp, #4]
+  41:Core/Src/main_app.c ****   vsprintf(str, format,args);
+  56              		.loc 1 41 3 view .LVU5
+  57 000e 02AC     		add	r4, sp, #8
+  58 0010 2046     		mov	r0, r4
+  59 0012 FFF7FEFF 		bl	vsprintf
+  60              	.LVL1:
+  42:Core/Src/main_app.c ****   HAL_UART_Transmit(&huart2,(uint8_t *)str, strlen(str),HAL_MAX_DELAY);
+  61              		.loc 1 42 3 view .LVU6
+  62              		.loc 1 42 45 is_stmt 0 view .LVU7
+  63 0016 2046     		mov	r0, r4
+  64 0018 FFF7FEFF 		bl	strlen
+  65              	.LVL2:
+  66              		.loc 1 42 3 discriminator 1 view .LVU8
+  67 001c 4FF0FF33 		mov	r3, #-1
+  68 0020 82B2     		uxth	r2, r0
+  69 0022 2146     		mov	r1, r4
+  70 0024 0348     		ldr	r0, .L3
+  71 0026 FFF7FEFF 		bl	HAL_UART_Transmit
+  72              	.LVL3:
+  43:Core/Src/main_app.c ****   va_end(args);
+ARM GAS  /tmp/ccMmEYxw.s 			page 3
+
+
+  73              		.loc 1 43 3 is_stmt 1 view .LVU9
+  44:Core/Src/main_app.c **** }
+  74              		.loc 1 44 1 is_stmt 0 view .LVU10
+  75 002a 16B0     		add	sp, sp, #88
+  76              	.LCFI3:
+  77              		.cfi_def_cfa_offset 24
+  78              		@ sp needed
+  79 002c BDE81040 		pop	{r4, lr}
+  80              	.LCFI4:
+  81              		.cfi_restore 14
+  82              		.cfi_restore 4
+  83              		.cfi_def_cfa_offset 16
+  84 0030 04B0     		add	sp, sp, #16
+  85              	.LCFI5:
+  86              		.cfi_restore 3
+  87              		.cfi_restore 2
+  88              		.cfi_restore 1
+  89              		.cfi_restore 0
+  90              		.cfi_def_cfa_offset 0
+  91 0032 7047     		bx	lr
+  92              	.L4:
+  93              		.align	2
+  94              	.L3:
+  95 0034 00000000 		.word	huart2
+  96              		.cfi_endproc
+  97              	.LFE135:
+  99              		.section	.text.RTC_CalendarConfig,"ax",%progbits
+ 100              		.align	1
+ 101              		.global	RTC_CalendarConfig
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 106              	RTC_CalendarConfig:
+ 107              	.LFB139:
+  45:Core/Src/main_app.c **** 
+  46:Core/Src/main_app.c **** int main(void)
+  47:Core/Src/main_app.c **** {
+  48:Core/Src/main_app.c ****   HAL_Init();
+  49:Core/Src/main_app.c ****   GPIO_Init();
+  50:Core/Src/main_app.c ****   SystemClock_Config_HSE(SYS_CLOCK_FREQ_50_MHZ);
+  51:Core/Src/main_app.c ****   UART2_Init();
+  52:Core/Src/main_app.c ****   RTC_Init();
+  53:Core/Src/main_app.c **** 
+  54:Core/Src/main_app.c ****   printmsg("This is RTC calendar Test program\r\n");
+  55:Core/Src/main_app.c **** 
+  56:Core/Src/main_app.c ****   if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
+  57:Core/Src/main_app.c ****   {
+  58:Core/Src/main_app.c ****     __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+  59:Core/Src/main_app.c ****     __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+  60:Core/Src/main_app.c ****     printmsg("Woke up from STANDBY\r\n");
+  61:Core/Src/main_app.c ****     HAL_GPIO_EXTI_Callback(0);
+  62:Core/Src/main_app.c ****   }
+  63:Core/Src/main_app.c **** 
+  64:Core/Src/main_app.c ****   // //RTC_CalendarConfig();
+  65:Core/Src/main_app.c ****   // //Enable the wakeup pin 1 in pwr_csr register
+  66:Core/Src/main_app.c ****   // // HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1); //Pin A0
+  67:Core/Src/main_app.c **** 
+ARM GAS  /tmp/ccMmEYxw.s 			page 4
+
+
+  68:Core/Src/main_app.c ****   // printmsg("Went to STANDBY mode\r\n");
+  69:Core/Src/main_app.c ****   // HAL_PWR_EnterSTANDBYMode();
+  70:Core/Src/main_app.c **** 
+  71:Core/Src/main_app.c ****   // while(1);
+  72:Core/Src/main_app.c **** 
+  73:Core/Src/main_app.c **** 
+  74:Core/Src/main_app.c ****     // RTC_CalendarConfig(); // Odkomentuj tylko raz, żeby ustawić datę, potem zakomentuj
+  75:Core/Src/main_app.c **** 
+  76:Core/Src/main_app.c ****     // 1. Włącz zegar kontrolera zasilania (PWR)
+  77:Core/Src/main_app.c ****     __HAL_RCC_PWR_CLK_ENABLE();
+  78:Core/Src/main_app.c **** 
+  79:Core/Src/main_app.c ****     // 2. Wyczyść flagę wybudzenia, żeby nie obudził się od razu
+  80:Core/Src/main_app.c ****     __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+  81:Core/Src/main_app.c **** 
+  82:Core/Src/main_app.c ****     // 3. Skonfiguruj rezystor Pull-Up dla PC13, który działa w Standby
+  83:Core/Src/main_app.c ****     // (Dzięki temu przycisk będzie działał poprawnie nawet gdy procesor śpi)
+  84:Core/Src/main_app.c ****     HAL_PWREx_EnableGPIOPullUp(PWR_GPIO_C, PWR_GPIO_BIT_13);
+  85:Core/Src/main_app.c ****     HAL_PWREx_EnablePullUpPullDownConfig();
+  86:Core/Src/main_app.c **** 
+  87:Core/Src/main_app.c ****     // 4. Włącz wybudzanie z pinu PC13 (WKUP2) na stan niski (LOW)
+  88:Core/Src/main_app.c ****     // (Bo przycisk na Nucleo zwiera do masy)
+  89:Core/Src/main_app.c ****     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN2_LOW);
+  90:Core/Src/main_app.c **** 
+  91:Core/Src/main_app.c ****     printmsg("Went to STANDBY mode\r\n");
+  92:Core/Src/main_app.c **** 
+  93:Core/Src/main_app.c ****     // 5. Idź spać
+  94:Core/Src/main_app.c ****     HAL_PWR_EnterSTANDBYMode();
+  95:Core/Src/main_app.c ****     
+  96:Core/Src/main_app.c ****     while(1);
+  97:Core/Src/main_app.c **** 
+  98:Core/Src/main_app.c **** 
+  99:Core/Src/main_app.c ****   return 0;
+ 100:Core/Src/main_app.c **** }
+ 101:Core/Src/main_app.c **** 
+ 102:Core/Src/main_app.c **** /**
+ 103:Core/Src/main_app.c ****   * @brief System Clock Configuration
+ 104:Core/Src/main_app.c ****   * @retval None
+ 105:Core/Src/main_app.c ****   */
+ 106:Core/Src/main_app.c **** void SystemClock_Config_HSE(uint8_t clock_freq)
+ 107:Core/Src/main_app.c **** {
+ 108:Core/Src/main_app.c ****   RCC_OscInitTypeDef osc_init;
+ 109:Core/Src/main_app.c ****   RCC_ClkInitTypeDef clk_init;
+ 110:Core/Src/main_app.c ****   uint32_t FLatency =0;
+ 111:Core/Src/main_app.c **** 
+ 112:Core/Src/main_app.c ****   osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+ 113:Core/Src/main_app.c **** 	osc_init.HSIState = RCC_HSI_ON;
+ 114:Core/Src/main_app.c **** 	osc_init.HSICalibrationValue = 16;
+ 115:Core/Src/main_app.c **** 	osc_init.PLL.PLLState = RCC_PLL_ON;
+ 116:Core/Src/main_app.c **** 	osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+ 117:Core/Src/main_app.c **** 
+ 118:Core/Src/main_app.c ****   switch(clock_freq) {
+ 119:Core/Src/main_app.c ****         case SYS_CLOCK_FREQ_50_MHZ:{
+ 120:Core/Src/main_app.c ****             osc_init.PLL.PLLM = 4;
+ 121:Core/Src/main_app.c ****             osc_init.PLL.PLLN = 25;
+ 122:Core/Src/main_app.c ****             osc_init.PLL.PLLR= 2;
+ 123:Core/Src/main_app.c ****             osc_init.PLL.PLLP = 2;
+ 124:Core/Src/main_app.c ****             osc_init.PLL.PLLQ  = 2;
+ARM GAS  /tmp/ccMmEYxw.s 			page 5
+
+
+ 125:Core/Src/main_app.c **** 
+ 126:Core/Src/main_app.c ****             clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | \
+ 127:Core/Src/main_app.c ****                                 RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 128:Core/Src/main_app.c ****             clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 129:Core/Src/main_app.c ****             clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 130:Core/Src/main_app.c ****             clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 131:Core/Src/main_app.c ****             clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 132:Core/Src/main_app.c **** 
+ 133:Core/Src/main_app.c ****             FLatency = FLASH_ACR_LATENCY_1WS;
+ 134:Core/Src/main_app.c ****             break;
+ 135:Core/Src/main_app.c ****     }
+ 136:Core/Src/main_app.c ****     case SYS_CLOCK_FREQ_80_MHZ: {
+ 137:Core/Src/main_app.c ****         osc_init.PLL.PLLM = 2;
+ 138:Core/Src/main_app.c ****         osc_init.PLL.PLLN = 20;
+ 139:Core/Src/main_app.c ****         osc_init.PLL.PLLR=2;
+ 140:Core/Src/main_app.c ****         osc_init.PLL.PLLP = 2;
+ 141:Core/Src/main_app.c ****         osc_init.PLL.PLLQ  = 2;
+ 142:Core/Src/main_app.c **** 
+ 143:Core/Src/main_app.c ****         clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | \
+ 144:Core/Src/main_app.c ****                             RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 145:Core/Src/main_app.c ****         clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 146:Core/Src/main_app.c ****         clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 147:Core/Src/main_app.c ****         clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 148:Core/Src/main_app.c ****         clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 149:Core/Src/main_app.c **** 
+ 150:Core/Src/main_app.c ****         FLatency = FLASH_ACR_LATENCY_2WS;
+ 151:Core/Src/main_app.c **** 
+ 152:Core/Src/main_app.c ****         break;
+ 153:Core/Src/main_app.c ****     }
+ 154:Core/Src/main_app.c **** 
+ 155:Core/Src/main_app.c **** 	default:
+ 156:Core/Src/main_app.c **** 	  return;
+ 157:Core/Src/main_app.c **** 	}
+ 158:Core/Src/main_app.c **** 
+ 159:Core/Src/main_app.c **** 	if(HAL_RCC_OscConfig(&osc_init) != HAL_OK)
+ 160:Core/Src/main_app.c **** 	{
+ 161:Core/Src/main_app.c **** 		Error_handler();
+ 162:Core/Src/main_app.c **** 	}
+ 163:Core/Src/main_app.c **** 
+ 164:Core/Src/main_app.c **** 
+ 165:Core/Src/main_app.c **** 	if(HAL_RCC_ClockConfig(&clk_init,FLatency) != HAL_OK)
+ 166:Core/Src/main_app.c **** 	{
+ 167:Core/Src/main_app.c **** 		Error_handler();
+ 168:Core/Src/main_app.c **** 	}
+ 169:Core/Src/main_app.c **** 
+ 170:Core/Src/main_app.c **** 	//Systick configuration
+ 171:Core/Src/main_app.c **** 
+ 172:Core/Src/main_app.c ****   /*Configure the systick timer interrupt frequency (for every 1 ms) */
+ 173:Core/Src/main_app.c ****   uint32_t hclk_freq = HAL_RCC_GetHCLKFreq();
+ 174:Core/Src/main_app.c ****   HAL_SYSTICK_Config(hclk_freq/1000);
+ 175:Core/Src/main_app.c **** 
+ 176:Core/Src/main_app.c ****   /**Configure the Systick
+ 177:Core/Src/main_app.c ****   */
+ 178:Core/Src/main_app.c ****   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+ 179:Core/Src/main_app.c **** 
+ 180:Core/Src/main_app.c ****   /* SysTick_IRQn interrupt configuration */
+ 181:Core/Src/main_app.c ****   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+ARM GAS  /tmp/ccMmEYxw.s 			page 6
+
+
+ 182:Core/Src/main_app.c **** }
+ 183:Core/Src/main_app.c **** 
+ 184:Core/Src/main_app.c **** /**
+ 185:Core/Src/main_app.c ****   * @brief RTC Initialization Function
+ 186:Core/Src/main_app.c ****   * @param None
+ 187:Core/Src/main_app.c ****   * @retval None
+ 188:Core/Src/main_app.c ****   */
+ 189:Core/Src/main_app.c **** void RTC_Init(void)
+ 190:Core/Src/main_app.c **** {
+ 191:Core/Src/main_app.c ****   hrtc.Instance = RTC;
+ 192:Core/Src/main_app.c ****   hrtc.Init.HourFormat =RTC_HOURFORMAT_12;
+ 193:Core/Src/main_app.c ****   hrtc.Init.AsynchPrediv = 0x7F;
+ 194:Core/Src/main_app.c ****   hrtc.Init.SynchPrediv = 0xFF;
+ 195:Core/Src/main_app.c ****   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+ 196:Core/Src/main_app.c ****   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_LOW;
+ 197:Core/Src/main_app.c ****   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+ 198:Core/Src/main_app.c **** 
+ 199:Core/Src/main_app.c ****   if( HAL_RTC_Init(&hrtc) != HAL_OK)
+ 200:Core/Src/main_app.c ****   {
+ 201:Core/Src/main_app.c ****     Error_handler();
+ 202:Core/Src/main_app.c ****   }
+ 203:Core/Src/main_app.c **** }
+ 204:Core/Src/main_app.c **** 
+ 205:Core/Src/main_app.c **** /**
+ 206:Core/Src/main_app.c ****   * @brief RTC calender configuration
+ 207:Core/Src/main_app.c ****   * @param None
+ 208:Core/Src/main_app.c ****   * @retval None
+ 209:Core/Src/main_app.c ****   */
+ 210:Core/Src/main_app.c **** void RTC_CalendarConfig(void)
+ 211:Core/Src/main_app.c **** {
+ 108              		.loc 1 211 1 is_stmt 1 view -0
+ 109              		.cfi_startproc
+ 110              		@ args = 0, pretend = 0, frame = 24
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112 0000 10B5     		push	{r4, lr}
+ 113              	.LCFI6:
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 4, -8
+ 116              		.cfi_offset 14, -4
+ 117 0002 86B0     		sub	sp, sp, #24
+ 118              	.LCFI7:
+ 119              		.cfi_def_cfa_offset 32
+ 212:Core/Src/main_app.c ****   RTC_TimeTypeDef RTC_TimeInit;
+ 120              		.loc 1 212 3 view .LVU12
+ 213:Core/Src/main_app.c ****   RTC_DateTypeDef RTC_DateInit;
+ 121              		.loc 1 213 3 view .LVU13
+ 214:Core/Src/main_app.c ****   //this function does RTC Calendar Config
+ 215:Core/Src/main_app.c ****   //Lets configure the calendar for Time : 21:16:10 PM Date : 28 december 2025 SUNDAY
+ 216:Core/Src/main_app.c **** 
+ 217:Core/Src/main_app.c ****   RTC_TimeInit.Hours = 21;
+ 122              		.loc 1 217 3 view .LVU14
+ 123              		.loc 1 217 22 is_stmt 0 view .LVU15
+ 124 0004 1523     		movs	r3, #21
+ 125 0006 8DF80430 		strb	r3, [sp, #4]
+ 218:Core/Src/main_app.c ****   RTC_TimeInit.Minutes = 16;
+ 126              		.loc 1 218 3 is_stmt 1 view .LVU16
+ 127              		.loc 1 218 24 is_stmt 0 view .LVU17
+ARM GAS  /tmp/ccMmEYxw.s 			page 7
+
+
+ 128 000a 1023     		movs	r3, #16
+ 129 000c 8DF80530 		strb	r3, [sp, #5]
+ 219:Core/Src/main_app.c ****   RTC_TimeInit.Seconds = 10;
+ 130              		.loc 1 219 3 is_stmt 1 view .LVU18
+ 131              		.loc 1 219 24 is_stmt 0 view .LVU19
+ 132 0010 0A23     		movs	r3, #10
+ 133 0012 8DF80630 		strb	r3, [sp, #6]
+ 220:Core/Src/main_app.c ****   RTC_TimeInit.TimeFormat = RTC_HOURFORMAT12_PM;
+ 134              		.loc 1 220 3 is_stmt 1 view .LVU20
+ 135              		.loc 1 220 27 is_stmt 0 view .LVU21
+ 136 0016 0123     		movs	r3, #1
+ 137 0018 8DF80730 		strb	r3, [sp, #7]
+ 221:Core/Src/main_app.c ****   HAL_RTC_SetTime(&hrtc, &RTC_TimeInit,RTC_FORMAT_BIN);
+ 138              		.loc 1 221 3 is_stmt 1 view .LVU22
+ 139 001c 0C4C     		ldr	r4, .L7
+ 140 001e 0022     		movs	r2, #0
+ 141 0020 01A9     		add	r1, sp, #4
+ 142 0022 2046     		mov	r0, r4
+ 143 0024 FFF7FEFF 		bl	HAL_RTC_SetTime
+ 144              	.LVL4:
+ 222:Core/Src/main_app.c **** 
+ 223:Core/Src/main_app.c ****   RTC_DateInit.Date = 28;
+ 145              		.loc 1 223 3 view .LVU23
+ 146              		.loc 1 223 21 is_stmt 0 view .LVU24
+ 147 0028 1C23     		movs	r3, #28
+ 148 002a 8DF80230 		strb	r3, [sp, #2]
+ 224:Core/Src/main_app.c ****   RTC_DateInit.Month = RTC_MONTH_DECEMBER;
+ 149              		.loc 1 224 3 is_stmt 1 view .LVU25
+ 150              		.loc 1 224 22 is_stmt 0 view .LVU26
+ 151 002e 1223     		movs	r3, #18
+ 152 0030 8DF80130 		strb	r3, [sp, #1]
+ 225:Core/Src/main_app.c ****   RTC_DateInit.Year = 25;
+ 153              		.loc 1 225 3 is_stmt 1 view .LVU27
+ 154              		.loc 1 225 21 is_stmt 0 view .LVU28
+ 155 0034 1923     		movs	r3, #25
+ 156 0036 8DF80330 		strb	r3, [sp, #3]
+ 226:Core/Src/main_app.c ****   RTC_DateInit.WeekDay = RTC_WEEKDAY_SUNDAY;
+ 157              		.loc 1 226 3 is_stmt 1 view .LVU29
+ 158              		.loc 1 226 24 is_stmt 0 view .LVU30
+ 159 003a 0723     		movs	r3, #7
+ 160 003c 8DF80030 		strb	r3, [sp]
+ 227:Core/Src/main_app.c **** 
+ 228:Core/Src/main_app.c ****   HAL_RTC_SetDate(&hrtc,&RTC_DateInit,RTC_FORMAT_BIN);
+ 161              		.loc 1 228 3 is_stmt 1 view .LVU31
+ 162 0040 0022     		movs	r2, #0
+ 163 0042 6946     		mov	r1, sp
+ 164 0044 2046     		mov	r0, r4
+ 165 0046 FFF7FEFF 		bl	HAL_RTC_SetDate
+ 166              	.LVL5:
+ 229:Core/Src/main_app.c **** }
+ 167              		.loc 1 229 1 is_stmt 0 view .LVU32
+ 168 004a 06B0     		add	sp, sp, #24
+ 169              	.LCFI8:
+ 170              		.cfi_def_cfa_offset 8
+ 171              		@ sp needed
+ 172 004c 10BD     		pop	{r4, pc}
+ 173              	.L8:
+ARM GAS  /tmp/ccMmEYxw.s 			page 8
+
+
+ 174 004e 00BF     		.align	2
+ 175              	.L7:
+ 176 0050 00000000 		.word	hrtc
+ 177              		.cfi_endproc
+ 178              	.LFE139:
+ 180              		.section	.text.GPIO_Init,"ax",%progbits
+ 181              		.align	1
+ 182              		.global	GPIO_Init
+ 183              		.syntax unified
+ 184              		.thumb
+ 185              		.thumb_func
+ 187              	GPIO_Init:
+ 188              	.LFB140:
+ 230:Core/Src/main_app.c **** 
+ 231:Core/Src/main_app.c **** /**
+ 232:Core/Src/main_app.c ****   * @brief GPIO Initialization Function
+ 233:Core/Src/main_app.c ****   * @param None
+ 234:Core/Src/main_app.c ****   * @retval None
+ 235:Core/Src/main_app.c ****   */
+ 236:Core/Src/main_app.c **** void GPIO_Init(void)
+ 237:Core/Src/main_app.c **** {
+ 189              		.loc 1 237 1 is_stmt 1 view -0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 48
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193 0000 10B5     		push	{r4, lr}
+ 194              	.LCFI9:
+ 195              		.cfi_def_cfa_offset 8
+ 196              		.cfi_offset 4, -8
+ 197              		.cfi_offset 14, -4
+ 198 0002 8CB0     		sub	sp, sp, #48
+ 199              	.LCFI10:
+ 200              		.cfi_def_cfa_offset 56
+ 238:Core/Src/main_app.c ****   __HAL_RCC_GPIOA_CLK_ENABLE();
+ 201              		.loc 1 238 3 view .LVU34
+ 202              	.LBB2:
+ 203              		.loc 1 238 3 view .LVU35
+ 204              		.loc 1 238 3 view .LVU36
+ 205 0004 194B     		ldr	r3, .L11
+ 206 0006 DA6C     		ldr	r2, [r3, #76]
+ 207 0008 42F00102 		orr	r2, r2, #1
+ 208 000c DA64     		str	r2, [r3, #76]
+ 209              		.loc 1 238 3 view .LVU37
+ 210 000e DA6C     		ldr	r2, [r3, #76]
+ 211 0010 02F00102 		and	r2, r2, #1
+ 212 0014 0092     		str	r2, [sp]
+ 213              		.loc 1 238 3 view .LVU38
+ 214 0016 009A     		ldr	r2, [sp]
+ 215              	.LBE2:
+ 216              		.loc 1 238 3 view .LVU39
+ 239:Core/Src/main_app.c ****   __HAL_RCC_GPIOC_CLK_ENABLE();
+ 217              		.loc 1 239 3 view .LVU40
+ 218              	.LBB3:
+ 219              		.loc 1 239 3 view .LVU41
+ 220              		.loc 1 239 3 view .LVU42
+ 221 0018 DA6C     		ldr	r2, [r3, #76]
+ 222 001a 42F00402 		orr	r2, r2, #4
+ARM GAS  /tmp/ccMmEYxw.s 			page 9
+
+
+ 223 001e DA64     		str	r2, [r3, #76]
+ 224              		.loc 1 239 3 view .LVU43
+ 225 0020 DB6C     		ldr	r3, [r3, #76]
+ 226 0022 03F00403 		and	r3, r3, #4
+ 227 0026 0193     		str	r3, [sp, #4]
+ 228              		.loc 1 239 3 view .LVU44
+ 229 0028 019B     		ldr	r3, [sp, #4]
+ 230              	.LBE3:
+ 231              		.loc 1 239 3 view .LVU45
+ 240:Core/Src/main_app.c **** 
+ 241:Core/Src/main_app.c **** 
+ 242:Core/Src/main_app.c ****   GPIO_InitTypeDef ledgpio , buttongpio;
+ 232              		.loc 1 242 3 view .LVU46
+ 243:Core/Src/main_app.c **** 
+ 244:Core/Src/main_app.c ****   ledgpio.Pin = GPIO_PIN_5;
+ 233              		.loc 1 244 3 view .LVU47
+ 234              		.loc 1 244 15 is_stmt 0 view .LVU48
+ 235 002a 2023     		movs	r3, #32
+ 236 002c 0793     		str	r3, [sp, #28]
+ 245:Core/Src/main_app.c ****   ledgpio.Mode = GPIO_MODE_OUTPUT_PP;
+ 237              		.loc 1 245 3 is_stmt 1 view .LVU49
+ 238              		.loc 1 245 16 is_stmt 0 view .LVU50
+ 239 002e 0123     		movs	r3, #1
+ 240 0030 0893     		str	r3, [sp, #32]
+ 246:Core/Src/main_app.c ****   ledgpio.Pull = GPIO_NOPULL;
+ 241              		.loc 1 246 3 is_stmt 1 view .LVU51
+ 242              		.loc 1 246 16 is_stmt 0 view .LVU52
+ 243 0032 0024     		movs	r4, #0
+ 244 0034 0994     		str	r4, [sp, #36]
+ 247:Core/Src/main_app.c ****   HAL_GPIO_Init(GPIOA,&ledgpio);
+ 245              		.loc 1 247 3 is_stmt 1 view .LVU53
+ 246 0036 07A9     		add	r1, sp, #28
+ 247 0038 4FF09040 		mov	r0, #1207959552
+ 248 003c FFF7FEFF 		bl	HAL_GPIO_Init
+ 249              	.LVL6:
+ 248:Core/Src/main_app.c **** 
+ 249:Core/Src/main_app.c ****   buttongpio.Pin = GPIO_PIN_13;
+ 250              		.loc 1 249 3 view .LVU54
+ 251              		.loc 1 249 18 is_stmt 0 view .LVU55
+ 252 0040 4FF40053 		mov	r3, #8192
+ 253 0044 0293     		str	r3, [sp, #8]
+ 250:Core/Src/main_app.c ****   buttongpio.Mode = GPIO_MODE_IT_FALLING;
+ 254              		.loc 1 250 3 is_stmt 1 view .LVU56
+ 255              		.loc 1 250 19 is_stmt 0 view .LVU57
+ 256 0046 4FF40413 		mov	r3, #2162688
+ 257 004a 0393     		str	r3, [sp, #12]
+ 251:Core/Src/main_app.c ****   buttongpio.Pull = GPIO_NOPULL;
+ 258              		.loc 1 251 3 is_stmt 1 view .LVU58
+ 259              		.loc 1 251 19 is_stmt 0 view .LVU59
+ 260 004c 0494     		str	r4, [sp, #16]
+ 252:Core/Src/main_app.c ****   HAL_GPIO_Init(GPIOC,&buttongpio);
+ 261              		.loc 1 252 3 is_stmt 1 view .LVU60
+ 262 004e 02A9     		add	r1, sp, #8
+ 263 0050 0748     		ldr	r0, .L11+4
+ 264 0052 FFF7FEFF 		bl	HAL_GPIO_Init
+ 265              	.LVL7:
+ 253:Core/Src/main_app.c **** 
+ARM GAS  /tmp/ccMmEYxw.s 			page 10
+
+
+ 254:Core/Src/main_app.c ****   HAL_NVIC_SetPriority(EXTI15_10_IRQn,15,0);
+ 266              		.loc 1 254 3 view .LVU61
+ 267 0056 2246     		mov	r2, r4
+ 268 0058 0F21     		movs	r1, #15
+ 269 005a 2820     		movs	r0, #40
+ 270 005c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 271              	.LVL8:
+ 255:Core/Src/main_app.c ****   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+ 272              		.loc 1 255 3 view .LVU62
+ 273 0060 2820     		movs	r0, #40
+ 274 0062 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 275              	.LVL9:
+ 256:Core/Src/main_app.c **** }
+ 276              		.loc 1 256 1 is_stmt 0 view .LVU63
+ 277 0066 0CB0     		add	sp, sp, #48
+ 278              	.LCFI11:
+ 279              		.cfi_def_cfa_offset 8
+ 280              		@ sp needed
+ 281 0068 10BD     		pop	{r4, pc}
+ 282              	.L12:
+ 283 006a 00BF     		.align	2
+ 284              	.L11:
+ 285 006c 00100240 		.word	1073876992
+ 286 0070 00080048 		.word	1207961600
+ 287              		.cfi_endproc
+ 288              	.LFE140:
+ 290              		.section	.text.getDayofweek,"ax",%progbits
+ 291              		.align	1
+ 292              		.global	getDayofweek
+ 293              		.syntax unified
+ 294              		.thumb
+ 295              		.thumb_func
+ 297              	getDayofweek:
+ 298              	.LVL10:
+ 299              	.LFB142:
+ 257:Core/Src/main_app.c **** 
+ 258:Core/Src/main_app.c **** /**
+ 259:Core/Src/main_app.c ****   * @brief USART2 Initialization Function
+ 260:Core/Src/main_app.c ****   * @param None
+ 261:Core/Src/main_app.c ****   * @retval None
+ 262:Core/Src/main_app.c ****   */
+ 263:Core/Src/main_app.c **** void UART2_Init(void)
+ 264:Core/Src/main_app.c **** {
+ 265:Core/Src/main_app.c ****   huart2.Instance = USART2;
+ 266:Core/Src/main_app.c ****   huart2.Init.BaudRate =115200;
+ 267:Core/Src/main_app.c ****   huart2.Init.WordLength = UART_WORDLENGTH_8B;
+ 268:Core/Src/main_app.c ****   huart2.Init.StopBits = UART_STOPBITS_1;
+ 269:Core/Src/main_app.c ****   huart2.Init.Parity = UART_PARITY_NONE;
+ 270:Core/Src/main_app.c ****   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 271:Core/Src/main_app.c ****   huart2.Init.Mode = UART_MODE_TX;
+ 272:Core/Src/main_app.c **** 
+ 273:Core/Src/main_app.c ****   if ( HAL_UART_Init(&huart2) != HAL_OK )
+ 274:Core/Src/main_app.c ****   {
+ 275:Core/Src/main_app.c ****     //There is a problem
+ 276:Core/Src/main_app.c ****     Error_handler();
+ 277:Core/Src/main_app.c ****   }
+ 278:Core/Src/main_app.c **** }
+ARM GAS  /tmp/ccMmEYxw.s 			page 11
+
+
+ 279:Core/Src/main_app.c **** 
+ 280:Core/Src/main_app.c **** /**
+ 281:Core/Src/main_app.c ****   * @brief  Returns the name of the day of the week.
+ 282:Core/Src/main_app.c ****   *         This function takes a number (1-7) and returns the corresponding
+ 283:Core/Src/main_app.c ****   *         day of the week as a string.
+ 284:Core/Src/main_app.c ****   * @param  number: The day of the week as a number (1 for Monday, 2 for Tuesday, etc.).
+ 285:Core/Src/main_app.c ****   * @retval char*: The name of the corresponding day of the week.
+ 286:Core/Src/main_app.c ****   */
+ 287:Core/Src/main_app.c **** char* getDayofweek(uint8_t number)
+ 288:Core/Src/main_app.c **** {
+ 300              		.loc 1 288 1 is_stmt 1 view -0
+ 301              		.cfi_startproc
+ 302              		@ args = 0, pretend = 0, frame = 32
+ 303              		@ frame_needed = 0, uses_anonymous_args = 0
+ 304              		.loc 1 288 1 is_stmt 0 view .LVU65
+ 305 0000 10B5     		push	{r4, lr}
+ 306              	.LCFI12:
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 4, -8
+ 309              		.cfi_offset 14, -4
+ 310 0002 88B0     		sub	sp, sp, #32
+ 311              	.LCFI13:
+ 312              		.cfi_def_cfa_offset 40
+ 313 0004 0446     		mov	r4, r0
+ 289:Core/Src/main_app.c ****   char *weekday[] = { "Monday", "TuesDay", "Wednesday","Thursday","Friday","Saturday","Sunday"};
+ 314              		.loc 1 289 3 is_stmt 1 view .LVU66
+ 315              		.loc 1 289 9 is_stmt 0 view .LVU67
+ 316 0006 0DF1040C 		add	ip, sp, #4
+ 317 000a DFF824E0 		ldr	lr, .L15
+ 318 000e BEE80F00 		ldmia	lr!, {r0, r1, r2, r3}
+ 319              	.LVL11:
+ 320              		.loc 1 289 9 view .LVU68
+ 321 0012 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 322 0016 9EE80700 		ldm	lr, {r0, r1, r2}
+ 323 001a 8CE80700 		stm	ip, {r0, r1, r2}
+ 290:Core/Src/main_app.c **** 
+ 291:Core/Src/main_app.c ****   return weekday[number-1];
+ 324              		.loc 1 291 3 is_stmt 1 view .LVU69
+ 325              		.loc 1 291 24 is_stmt 0 view .LVU70
+ 326 001e 631E     		subs	r3, r4, #1
+ 327              		.loc 1 291 17 view .LVU71
+ 328 0020 08AA     		add	r2, sp, #32
+ 329 0022 02EB8303 		add	r3, r2, r3, lsl #2
+ 292:Core/Src/main_app.c **** }
+ 330              		.loc 1 292 1 view .LVU72
+ 331 0026 53F81C0C 		ldr	r0, [r3, #-28]
+ 332 002a 08B0     		add	sp, sp, #32
+ 333              	.LCFI14:
+ 334              		.cfi_def_cfa_offset 8
+ 335              		@ sp needed
+ 336 002c 10BD     		pop	{r4, pc}
+ 337              	.LVL12:
+ 338              	.L16:
+ 339              		.loc 1 292 1 view .LVU73
+ 340 002e 00BF     		.align	2
+ 341              	.L15:
+ 342 0030 00000000 		.word	.LANCHOR0
+ARM GAS  /tmp/ccMmEYxw.s 			page 12
+
+
+ 343              		.cfi_endproc
+ 344              	.LFE142:
+ 346              		.section	.rodata.HAL_GPIO_EXTI_Callback.str1.4,"aMS",%progbits,1
+ 347              		.align	2
+ 348              	.LC9:
+ 349 0000 43757272 		.ascii	"Current Time is : %02d:%02d:%02d\015\012\000"
+ 349      656E7420 
+ 349      54696D65 
+ 349      20697320 
+ 349      3A202530 
+ 350 0023 00       		.align	2
+ 351              	.LC10:
+ 352 0024 43757272 		.ascii	"Current Date is : %02d-%2d-%2d  <%s> \015\012\000"
+ 352      656E7420 
+ 352      44617465 
+ 352      20697320 
+ 352      3A202530 
+ 353              		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+ 354              		.align	1
+ 355              		.global	HAL_GPIO_EXTI_Callback
+ 356              		.syntax unified
+ 357              		.thumb
+ 358              		.thumb_func
+ 360              	HAL_GPIO_EXTI_Callback:
+ 361              	.LVL13:
+ 362              	.LFB143:
+ 293:Core/Src/main_app.c **** 
+ 294:Core/Src/main_app.c **** /**
+ 295:Core/Src/main_app.c ****   * @brief  EXTI line detection callbacks.
+ 296:Core/Src/main_app.c ****   * @param  GPIO_Pin Specifies the pins connected EXTI line
+ 297:Core/Src/main_app.c ****   * @retval None
+ 298:Core/Src/main_app.c ****   */
+ 299:Core/Src/main_app.c **** void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+ 300:Core/Src/main_app.c **** {
+ 363              		.loc 1 300 1 is_stmt 1 view -0
+ 364              		.cfi_startproc
+ 365              		@ args = 0, pretend = 0, frame = 24
+ 366              		@ frame_needed = 0, uses_anonymous_args = 0
+ 367              		.loc 1 300 1 is_stmt 0 view .LVU75
+ 368 0000 70B5     		push	{r4, r5, r6, lr}
+ 369              	.LCFI15:
+ 370              		.cfi_def_cfa_offset 16
+ 371              		.cfi_offset 4, -16
+ 372              		.cfi_offset 5, -12
+ 373              		.cfi_offset 6, -8
+ 374              		.cfi_offset 14, -4
+ 375 0002 88B0     		sub	sp, sp, #32
+ 376              	.LCFI16:
+ 377              		.cfi_def_cfa_offset 48
+ 301:Core/Src/main_app.c ****   RTC_TimeTypeDef RTC_TimeRead;
+ 378              		.loc 1 301 3 is_stmt 1 view .LVU76
+ 302:Core/Src/main_app.c ****   RTC_DateTypeDef RTC_DateRead;
+ 379              		.loc 1 302 3 view .LVU77
+ 303:Core/Src/main_app.c **** 
+ 304:Core/Src/main_app.c ****   HAL_RTC_GetTime(&hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
+ 380              		.loc 1 304 3 view .LVU78
+ 381 0004 134C     		ldr	r4, .L19
+ARM GAS  /tmp/ccMmEYxw.s 			page 13
+
+
+ 382 0006 0022     		movs	r2, #0
+ 383 0008 03A9     		add	r1, sp, #12
+ 384 000a 2046     		mov	r0, r4
+ 385              	.LVL14:
+ 386              		.loc 1 304 3 is_stmt 0 view .LVU79
+ 387 000c FFF7FEFF 		bl	HAL_RTC_GetTime
+ 388              	.LVL15:
+ 305:Core/Src/main_app.c ****   HAL_RTC_GetDate(&hrtc,&RTC_DateRead,RTC_FORMAT_BIN);
+ 389              		.loc 1 305 3 is_stmt 1 view .LVU80
+ 390 0010 0022     		movs	r2, #0
+ 391 0012 02A9     		add	r1, sp, #8
+ 392 0014 2046     		mov	r0, r4
+ 393 0016 FFF7FEFF 		bl	HAL_RTC_GetDate
+ 394              	.LVL16:
+ 306:Core/Src/main_app.c **** 
+ 307:Core/Src/main_app.c ****   printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
+ 395              		.loc 1 307 3 view .LVU81
+ 396 001a 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 397 001e 9DF80D20 		ldrb	r2, [sp, #13]	@ zero_extendqisi2
+ 398 0022 9DF80C10 		ldrb	r1, [sp, #12]	@ zero_extendqisi2
+ 399 0026 0C48     		ldr	r0, .L19+4
+ 400 0028 FFF7FEFF 		bl	printmsg
+ 401              	.LVL17:
+ 308:Core/Src/main_app.c ****      RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
+ 309:Core/Src/main_app.c ****   printmsg("Current Date is : %02d-%2d-%2d  <%s> \r\n",RTC_DateRead.Month,RTC_DateRead.Date,\
+ 402              		.loc 1 309 3 view .LVU82
+ 403              		.loc 1 309 68 is_stmt 0 view .LVU83
+ 404 002c 9DF80940 		ldrb	r4, [sp, #9]	@ zero_extendqisi2
+ 405              		.loc 1 309 87 view .LVU84
+ 406 0030 9DF80A50 		ldrb	r5, [sp, #10]	@ zero_extendqisi2
+ 310:Core/Src/main_app.c ****      RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+ 407              		.loc 1 310 18 view .LVU85
+ 408 0034 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 409 0038 1E46     		mov	r6, r3
+ 309:Core/Src/main_app.c ****      RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+ 410              		.loc 1 309 3 view .LVU86
+ 411 003a 9DF80800 		ldrb	r0, [sp, #8]	@ zero_extendqisi2
+ 412 003e FFF7FEFF 		bl	getDayofweek
+ 413              	.LVL18:
+ 309:Core/Src/main_app.c ****      RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+ 414              		.loc 1 309 3 discriminator 1 view .LVU87
+ 415 0042 0090     		str	r0, [sp]
+ 416 0044 3346     		mov	r3, r6
+ 417 0046 2A46     		mov	r2, r5
+ 418 0048 2146     		mov	r1, r4
+ 419 004a 0448     		ldr	r0, .L19+8
+ 420 004c FFF7FEFF 		bl	printmsg
+ 421              	.LVL19:
+ 311:Core/Src/main_app.c **** }
+ 422              		.loc 1 311 1 view .LVU88
+ 423 0050 08B0     		add	sp, sp, #32
+ 424              	.LCFI17:
+ 425              		.cfi_def_cfa_offset 16
+ 426              		@ sp needed
+ 427 0052 70BD     		pop	{r4, r5, r6, pc}
+ 428              	.L20:
+ 429              		.align	2
+ARM GAS  /tmp/ccMmEYxw.s 			page 14
+
+
+ 430              	.L19:
+ 431 0054 00000000 		.word	hrtc
+ 432 0058 00000000 		.word	.LC9
+ 433 005c 24000000 		.word	.LC10
+ 434              		.cfi_endproc
+ 435              	.LFE143:
+ 437              		.section	.text.Error_handler,"ax",%progbits
+ 438              		.align	1
+ 439              		.global	Error_handler
+ 440              		.syntax unified
+ 441              		.thumb
+ 442              		.thumb_func
+ 444              	Error_handler:
+ 445              	.LFB144:
+ 312:Core/Src/main_app.c **** 
+ 313:Core/Src/main_app.c **** /**
+ 314:Core/Src/main_app.c ****   * @brief  This function is executed in case of error occurrence.
+ 315:Core/Src/main_app.c ****   * @retval None
+ 316:Core/Src/main_app.c ****   */
+ 317:Core/Src/main_app.c **** void Error_handler(void)
+ 318:Core/Src/main_app.c **** {
+ 446              		.loc 1 318 1 is_stmt 1 view -0
+ 447              		.cfi_startproc
+ 448              		@ Volatile: function does not return.
+ 449              		@ args = 0, pretend = 0, frame = 0
+ 450              		@ frame_needed = 0, uses_anonymous_args = 0
+ 451              		@ link register save eliminated.
+ 452              	.L22:
+ 319:Core/Src/main_app.c ****   while(1);
+ 453              		.loc 1 319 3 view .LVU90
+ 454              		.loc 1 319 8 view .LVU91
+ 455 0000 FEE7     		b	.L22
+ 456              		.cfi_endproc
+ 457              	.LFE144:
+ 459              		.section	.text.SystemClock_Config_HSE,"ax",%progbits
+ 460              		.align	1
+ 461              		.global	SystemClock_Config_HSE
+ 462              		.syntax unified
+ 463              		.thumb
+ 464              		.thumb_func
+ 466              	SystemClock_Config_HSE:
+ 467              	.LVL20:
+ 468              	.LFB137:
+ 107:Core/Src/main_app.c ****   RCC_OscInitTypeDef osc_init;
+ 469              		.loc 1 107 1 view -0
+ 470              		.cfi_startproc
+ 471              		@ args = 0, pretend = 0, frame = 88
+ 472              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107:Core/Src/main_app.c ****   RCC_OscInitTypeDef osc_init;
+ 473              		.loc 1 107 1 is_stmt 0 view .LVU93
+ 474 0000 10B5     		push	{r4, lr}
+ 475              	.LCFI18:
+ 476              		.cfi_def_cfa_offset 8
+ 477              		.cfi_offset 4, -8
+ 478              		.cfi_offset 14, -4
+ 479 0002 96B0     		sub	sp, sp, #88
+ 480              	.LCFI19:
+ARM GAS  /tmp/ccMmEYxw.s 			page 15
+
+
+ 481              		.cfi_def_cfa_offset 96
+ 108:Core/Src/main_app.c ****   RCC_ClkInitTypeDef clk_init;
+ 482              		.loc 1 108 3 is_stmt 1 view .LVU94
+ 109:Core/Src/main_app.c ****   uint32_t FLatency =0;
+ 483              		.loc 1 109 3 view .LVU95
+ 110:Core/Src/main_app.c **** 
+ 484              		.loc 1 110 3 view .LVU96
+ 485              	.LVL21:
+ 112:Core/Src/main_app.c **** 	osc_init.HSIState = RCC_HSI_ON;
+ 486              		.loc 1 112 3 view .LVU97
+ 112:Core/Src/main_app.c **** 	osc_init.HSIState = RCC_HSI_ON;
+ 487              		.loc 1 112 27 is_stmt 0 view .LVU98
+ 488 0004 0223     		movs	r3, #2
+ 489 0006 0593     		str	r3, [sp, #20]
+ 113:Core/Src/main_app.c **** 	osc_init.HSICalibrationValue = 16;
+ 490              		.loc 1 113 2 is_stmt 1 view .LVU99
+ 113:Core/Src/main_app.c **** 	osc_init.HSICalibrationValue = 16;
+ 491              		.loc 1 113 20 is_stmt 0 view .LVU100
+ 492 0008 4FF48072 		mov	r2, #256
+ 493 000c 0892     		str	r2, [sp, #32]
+ 114:Core/Src/main_app.c **** 	osc_init.PLL.PLLState = RCC_PLL_ON;
+ 494              		.loc 1 114 2 is_stmt 1 view .LVU101
+ 114:Core/Src/main_app.c **** 	osc_init.PLL.PLLState = RCC_PLL_ON;
+ 495              		.loc 1 114 31 is_stmt 0 view .LVU102
+ 496 000e 1022     		movs	r2, #16
+ 497 0010 0992     		str	r2, [sp, #36]
+ 115:Core/Src/main_app.c **** 	osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+ 498              		.loc 1 115 2 is_stmt 1 view .LVU103
+ 115:Core/Src/main_app.c **** 	osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+ 499              		.loc 1 115 24 is_stmt 0 view .LVU104
+ 500 0012 0F93     		str	r3, [sp, #60]
+ 116:Core/Src/main_app.c **** 
+ 501              		.loc 1 116 2 is_stmt 1 view .LVU105
+ 116:Core/Src/main_app.c **** 
+ 502              		.loc 1 116 25 is_stmt 0 view .LVU106
+ 503 0014 1093     		str	r3, [sp, #64]
+ 118:Core/Src/main_app.c ****         case SYS_CLOCK_FREQ_50_MHZ:{
+ 504              		.loc 1 118 3 is_stmt 1 view .LVU107
+ 505 0016 3228     		cmp	r0, #50
+ 506 0018 14D0     		beq	.L24
+ 507 001a 5028     		cmp	r0, #80
+ 508 001c 40D1     		bne	.L23
+ 137:Core/Src/main_app.c ****         osc_init.PLL.PLLN = 20;
+ 509              		.loc 1 137 9 view .LVU108
+ 137:Core/Src/main_app.c ****         osc_init.PLL.PLLN = 20;
+ 510              		.loc 1 137 27 is_stmt 0 view .LVU109
+ 511 001e 0221     		movs	r1, #2
+ 512 0020 1191     		str	r1, [sp, #68]
+ 138:Core/Src/main_app.c ****         osc_init.PLL.PLLR=2;
+ 513              		.loc 1 138 9 is_stmt 1 view .LVU110
+ 138:Core/Src/main_app.c ****         osc_init.PLL.PLLR=2;
+ 514              		.loc 1 138 27 is_stmt 0 view .LVU111
+ 515 0022 1423     		movs	r3, #20
+ 516 0024 1293     		str	r3, [sp, #72]
+ 139:Core/Src/main_app.c ****         osc_init.PLL.PLLP = 2;
+ 517              		.loc 1 139 9 is_stmt 1 view .LVU112
+ 139:Core/Src/main_app.c ****         osc_init.PLL.PLLP = 2;
+ARM GAS  /tmp/ccMmEYxw.s 			page 16
+
+
+ 518              		.loc 1 139 26 is_stmt 0 view .LVU113
+ 519 0026 1591     		str	r1, [sp, #84]
+ 140:Core/Src/main_app.c ****         osc_init.PLL.PLLQ  = 2;
+ 520              		.loc 1 140 9 is_stmt 1 view .LVU114
+ 140:Core/Src/main_app.c ****         osc_init.PLL.PLLQ  = 2;
+ 521              		.loc 1 140 27 is_stmt 0 view .LVU115
+ 522 0028 1391     		str	r1, [sp, #76]
+ 141:Core/Src/main_app.c **** 
+ 523              		.loc 1 141 9 is_stmt 1 view .LVU116
+ 141:Core/Src/main_app.c **** 
+ 524              		.loc 1 141 28 is_stmt 0 view .LVU117
+ 525 002a 1491     		str	r1, [sp, #80]
+ 143:Core/Src/main_app.c ****                             RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 526              		.loc 1 143 9 is_stmt 1 view .LVU118
+ 143:Core/Src/main_app.c ****                             RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 527              		.loc 1 143 28 is_stmt 0 view .LVU119
+ 528 002c 0F23     		movs	r3, #15
+ 529 002e 0093     		str	r3, [sp]
+ 145:Core/Src/main_app.c ****         clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 530              		.loc 1 145 9 is_stmt 1 view .LVU120
+ 145:Core/Src/main_app.c ****         clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 531              		.loc 1 145 31 is_stmt 0 view .LVU121
+ 532 0030 0323     		movs	r3, #3
+ 533 0032 0193     		str	r3, [sp, #4]
+ 146:Core/Src/main_app.c ****         clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 534              		.loc 1 146 9 is_stmt 1 view .LVU122
+ 146:Core/Src/main_app.c ****         clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 535              		.loc 1 146 32 is_stmt 0 view .LVU123
+ 536 0034 0023     		movs	r3, #0
+ 537 0036 0293     		str	r3, [sp, #8]
+ 147:Core/Src/main_app.c ****         clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 538              		.loc 1 147 9 is_stmt 1 view .LVU124
+ 147:Core/Src/main_app.c ****         clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 539              		.loc 1 147 33 is_stmt 0 view .LVU125
+ 540 0038 4FF48063 		mov	r3, #1024
+ 541 003c 0393     		str	r3, [sp, #12]
+ 148:Core/Src/main_app.c **** 
+ 542              		.loc 1 148 9 is_stmt 1 view .LVU126
+ 148:Core/Src/main_app.c **** 
+ 543              		.loc 1 148 33 is_stmt 0 view .LVU127
+ 544 003e 0493     		str	r3, [sp, #16]
+ 150:Core/Src/main_app.c **** 
+ 545              		.loc 1 150 9 is_stmt 1 view .LVU128
+ 546              	.LVL22:
+ 152:Core/Src/main_app.c ****     }
+ 547              		.loc 1 152 9 view .LVU129
+ 150:Core/Src/main_app.c **** 
+ 548              		.loc 1 150 18 is_stmt 0 view .LVU130
+ 549 0040 0C46     		mov	r4, r1
+ 152:Core/Src/main_app.c ****     }
+ 550              		.loc 1 152 9 view .LVU131
+ 551 0042 13E0     		b	.L27
+ 552              	.LVL23:
+ 553              	.L24:
+ 120:Core/Src/main_app.c ****             osc_init.PLL.PLLN = 25;
+ 554              		.loc 1 120 13 is_stmt 1 view .LVU132
+ 120:Core/Src/main_app.c ****             osc_init.PLL.PLLN = 25;
+ARM GAS  /tmp/ccMmEYxw.s 			page 17
+
+
+ 555              		.loc 1 120 31 is_stmt 0 view .LVU133
+ 556 0044 0423     		movs	r3, #4
+ 557 0046 1193     		str	r3, [sp, #68]
+ 121:Core/Src/main_app.c ****             osc_init.PLL.PLLR= 2;
+ 558              		.loc 1 121 13 is_stmt 1 view .LVU134
+ 121:Core/Src/main_app.c ****             osc_init.PLL.PLLR= 2;
+ 559              		.loc 1 121 31 is_stmt 0 view .LVU135
+ 560 0048 1923     		movs	r3, #25
+ 561 004a 1293     		str	r3, [sp, #72]
+ 122:Core/Src/main_app.c ****             osc_init.PLL.PLLP = 2;
+ 562              		.loc 1 122 13 is_stmt 1 view .LVU136
+ 122:Core/Src/main_app.c ****             osc_init.PLL.PLLP = 2;
+ 563              		.loc 1 122 30 is_stmt 0 view .LVU137
+ 564 004c 0223     		movs	r3, #2
+ 565 004e 1593     		str	r3, [sp, #84]
+ 123:Core/Src/main_app.c ****             osc_init.PLL.PLLQ  = 2;
+ 566              		.loc 1 123 13 is_stmt 1 view .LVU138
+ 123:Core/Src/main_app.c ****             osc_init.PLL.PLLQ  = 2;
+ 567              		.loc 1 123 31 is_stmt 0 view .LVU139
+ 568 0050 1393     		str	r3, [sp, #76]
+ 124:Core/Src/main_app.c **** 
+ 569              		.loc 1 124 13 is_stmt 1 view .LVU140
+ 124:Core/Src/main_app.c **** 
+ 570              		.loc 1 124 32 is_stmt 0 view .LVU141
+ 571 0052 1493     		str	r3, [sp, #80]
+ 126:Core/Src/main_app.c ****                                 RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 572              		.loc 1 126 13 is_stmt 1 view .LVU142
+ 126:Core/Src/main_app.c ****                                 RCC_CLOCKTYPE_PCLK1  | RCC_CLOCKTYPE_PCLK2;
+ 573              		.loc 1 126 32 is_stmt 0 view .LVU143
+ 574 0054 0F23     		movs	r3, #15
+ 575 0056 0093     		str	r3, [sp]
+ 128:Core/Src/main_app.c ****             clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 576              		.loc 1 128 13 is_stmt 1 view .LVU144
+ 128:Core/Src/main_app.c ****             clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 577              		.loc 1 128 35 is_stmt 0 view .LVU145
+ 578 0058 0323     		movs	r3, #3
+ 579 005a 0193     		str	r3, [sp, #4]
+ 129:Core/Src/main_app.c ****             clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 580              		.loc 1 129 13 is_stmt 1 view .LVU146
+ 129:Core/Src/main_app.c ****             clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+ 581              		.loc 1 129 36 is_stmt 0 view .LVU147
+ 582 005c 0023     		movs	r3, #0
+ 583 005e 0293     		str	r3, [sp, #8]
+ 130:Core/Src/main_app.c ****             clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 584              		.loc 1 130 13 is_stmt 1 view .LVU148
+ 130:Core/Src/main_app.c ****             clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+ 585              		.loc 1 130 37 is_stmt 0 view .LVU149
+ 586 0060 4FF48063 		mov	r3, #1024
+ 587 0064 0393     		str	r3, [sp, #12]
+ 131:Core/Src/main_app.c **** 
+ 588              		.loc 1 131 13 is_stmt 1 view .LVU150
+ 131:Core/Src/main_app.c **** 
+ 589              		.loc 1 131 37 is_stmt 0 view .LVU151
+ 590 0066 0493     		str	r3, [sp, #16]
+ 133:Core/Src/main_app.c ****             break;
+ 591              		.loc 1 133 13 is_stmt 1 view .LVU152
+ 592              	.LVL24:
+ARM GAS  /tmp/ccMmEYxw.s 			page 18
+
+
+ 134:Core/Src/main_app.c ****     }
+ 593              		.loc 1 134 13 view .LVU153
+ 133:Core/Src/main_app.c ****             break;
+ 594              		.loc 1 133 22 is_stmt 0 view .LVU154
+ 595 0068 0123     		movs	r3, #1
+ 596 006a 1C46     		mov	r4, r3
+ 597              	.LVL25:
+ 598              	.L27:
+ 159:Core/Src/main_app.c **** 	{
+ 599              		.loc 1 159 2 is_stmt 1 view .LVU155
+ 159:Core/Src/main_app.c **** 	{
+ 600              		.loc 1 159 5 is_stmt 0 view .LVU156
+ 601 006c 05A8     		add	r0, sp, #20
+ 602              	.LVL26:
+ 159:Core/Src/main_app.c **** 	{
+ 603              		.loc 1 159 5 view .LVU157
+ 604 006e FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 605              	.LVL27:
+ 159:Core/Src/main_app.c **** 	{
+ 606              		.loc 1 159 4 discriminator 1 view .LVU158
+ 607 0072 B8B9     		cbnz	r0, .L32
+ 165:Core/Src/main_app.c **** 	{
+ 608              		.loc 1 165 2 is_stmt 1 view .LVU159
+ 165:Core/Src/main_app.c **** 	{
+ 609              		.loc 1 165 5 is_stmt 0 view .LVU160
+ 610 0074 2146     		mov	r1, r4
+ 611 0076 6846     		mov	r0, sp
+ 612 0078 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 613              	.LVL28:
+ 165:Core/Src/main_app.c **** 	{
+ 614              		.loc 1 165 4 discriminator 1 view .LVU161
+ 615 007c A0B9     		cbnz	r0, .L33
+ 173:Core/Src/main_app.c ****   HAL_SYSTICK_Config(hclk_freq/1000);
+ 616              		.loc 1 173 3 is_stmt 1 view .LVU162
+ 173:Core/Src/main_app.c ****   HAL_SYSTICK_Config(hclk_freq/1000);
+ 617              		.loc 1 173 24 is_stmt 0 view .LVU163
+ 618 007e FFF7FEFF 		bl	HAL_RCC_GetHCLKFreq
+ 619              	.LVL29:
+ 174:Core/Src/main_app.c **** 
+ 620              		.loc 1 174 3 is_stmt 1 view .LVU164
+ 174:Core/Src/main_app.c **** 
+ 621              		.loc 1 174 31 is_stmt 0 view .LVU165
+ 622 0082 0A4B     		ldr	r3, .L34
+ 623 0084 A3FB0030 		umull	r3, r0, r3, r0
+ 624              	.LVL30:
+ 174:Core/Src/main_app.c **** 
+ 625              		.loc 1 174 3 view .LVU166
+ 626 0088 8009     		lsrs	r0, r0, #6
+ 627 008a FFF7FEFF 		bl	HAL_SYSTICK_Config
+ 628              	.LVL31:
+ 178:Core/Src/main_app.c **** 
+ 629              		.loc 1 178 3 is_stmt 1 view .LVU167
+ 630 008e 0420     		movs	r0, #4
+ 631 0090 FFF7FEFF 		bl	HAL_SYSTICK_CLKSourceConfig
+ 632              	.LVL32:
+ 181:Core/Src/main_app.c **** }
+ 633              		.loc 1 181 3 view .LVU168
+ARM GAS  /tmp/ccMmEYxw.s 			page 19
+
+
+ 634 0094 0022     		movs	r2, #0
+ 635 0096 1146     		mov	r1, r2
+ 636 0098 4FF0FF30 		mov	r0, #-1
+ 637 009c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 638              	.LVL33:
+ 639              	.L23:
+ 182:Core/Src/main_app.c **** 
+ 640              		.loc 1 182 1 is_stmt 0 view .LVU169
+ 641 00a0 16B0     		add	sp, sp, #88
+ 642              	.LCFI20:
+ 643              		.cfi_remember_state
+ 644              		.cfi_def_cfa_offset 8
+ 645              		@ sp needed
+ 646 00a2 10BD     		pop	{r4, pc}
+ 647              	.LVL34:
+ 648              	.L32:
+ 649              	.LCFI21:
+ 650              		.cfi_restore_state
+ 161:Core/Src/main_app.c **** 	}
+ 651              		.loc 1 161 3 is_stmt 1 view .LVU170
+ 652 00a4 FFF7FEFF 		bl	Error_handler
+ 653              	.LVL35:
+ 654              	.L33:
+ 167:Core/Src/main_app.c **** 	}
+ 655              		.loc 1 167 3 view .LVU171
+ 656 00a8 FFF7FEFF 		bl	Error_handler
+ 657              	.LVL36:
+ 658              	.L35:
+ 659              		.align	2
+ 660              	.L34:
+ 661 00ac D34D6210 		.word	274877907
+ 662              		.cfi_endproc
+ 663              	.LFE137:
+ 665              		.section	.text.RTC_Init,"ax",%progbits
+ 666              		.align	1
+ 667              		.global	RTC_Init
+ 668              		.syntax unified
+ 669              		.thumb
+ 670              		.thumb_func
+ 672              	RTC_Init:
+ 673              	.LFB138:
+ 190:Core/Src/main_app.c ****   hrtc.Instance = RTC;
+ 674              		.loc 1 190 1 view -0
+ 675              		.cfi_startproc
+ 676              		@ args = 0, pretend = 0, frame = 0
+ 677              		@ frame_needed = 0, uses_anonymous_args = 0
+ 678 0000 08B5     		push	{r3, lr}
+ 679              	.LCFI22:
+ 680              		.cfi_def_cfa_offset 8
+ 681              		.cfi_offset 3, -8
+ 682              		.cfi_offset 14, -4
+ 191:Core/Src/main_app.c ****   hrtc.Init.HourFormat =RTC_HOURFORMAT_12;
+ 683              		.loc 1 191 3 view .LVU173
+ 191:Core/Src/main_app.c ****   hrtc.Init.HourFormat =RTC_HOURFORMAT_12;
+ 684              		.loc 1 191 17 is_stmt 0 view .LVU174
+ 685 0002 0A48     		ldr	r0, .L40
+ 686 0004 0A4B     		ldr	r3, .L40+4
+ARM GAS  /tmp/ccMmEYxw.s 			page 20
+
+
+ 687 0006 0360     		str	r3, [r0]
+ 192:Core/Src/main_app.c ****   hrtc.Init.AsynchPrediv = 0x7F;
+ 688              		.loc 1 192 3 is_stmt 1 view .LVU175
+ 192:Core/Src/main_app.c ****   hrtc.Init.AsynchPrediv = 0x7F;
+ 689              		.loc 1 192 24 is_stmt 0 view .LVU176
+ 690 0008 4023     		movs	r3, #64
+ 691 000a 4360     		str	r3, [r0, #4]
+ 193:Core/Src/main_app.c ****   hrtc.Init.SynchPrediv = 0xFF;
+ 692              		.loc 1 193 3 is_stmt 1 view .LVU177
+ 193:Core/Src/main_app.c ****   hrtc.Init.SynchPrediv = 0xFF;
+ 693              		.loc 1 193 26 is_stmt 0 view .LVU178
+ 694 000c 7F23     		movs	r3, #127
+ 695 000e 8360     		str	r3, [r0, #8]
+ 194:Core/Src/main_app.c ****   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+ 696              		.loc 1 194 3 is_stmt 1 view .LVU179
+ 194:Core/Src/main_app.c ****   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+ 697              		.loc 1 194 25 is_stmt 0 view .LVU180
+ 698 0010 FF23     		movs	r3, #255
+ 699 0012 C360     		str	r3, [r0, #12]
+ 195:Core/Src/main_app.c ****   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_LOW;
+ 700              		.loc 1 195 3 is_stmt 1 view .LVU181
+ 195:Core/Src/main_app.c ****   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_LOW;
+ 701              		.loc 1 195 20 is_stmt 0 view .LVU182
+ 702 0014 0023     		movs	r3, #0
+ 703 0016 0361     		str	r3, [r0, #16]
+ 196:Core/Src/main_app.c ****   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+ 704              		.loc 1 196 3 is_stmt 1 view .LVU183
+ 196:Core/Src/main_app.c ****   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+ 705              		.loc 1 196 28 is_stmt 0 view .LVU184
+ 706 0018 4FF48012 		mov	r2, #1048576
+ 707 001c 8261     		str	r2, [r0, #24]
+ 197:Core/Src/main_app.c **** 
+ 708              		.loc 1 197 3 is_stmt 1 view .LVU185
+ 197:Core/Src/main_app.c **** 
+ 709              		.loc 1 197 24 is_stmt 0 view .LVU186
+ 710 001e C361     		str	r3, [r0, #28]
+ 199:Core/Src/main_app.c ****   {
+ 711              		.loc 1 199 3 is_stmt 1 view .LVU187
+ 199:Core/Src/main_app.c ****   {
+ 712              		.loc 1 199 7 is_stmt 0 view .LVU188
+ 713 0020 FFF7FEFF 		bl	HAL_RTC_Init
+ 714              	.LVL37:
+ 199:Core/Src/main_app.c ****   {
+ 715              		.loc 1 199 5 discriminator 1 view .LVU189
+ 716 0024 00B9     		cbnz	r0, .L39
+ 203:Core/Src/main_app.c **** 
+ 717              		.loc 1 203 1 view .LVU190
+ 718 0026 08BD     		pop	{r3, pc}
+ 719              	.L39:
+ 201:Core/Src/main_app.c ****   }
+ 720              		.loc 1 201 5 is_stmt 1 view .LVU191
+ 721 0028 FFF7FEFF 		bl	Error_handler
+ 722              	.LVL38:
+ 723              	.L41:
+ 724              		.align	2
+ 725              	.L40:
+ 726 002c 00000000 		.word	hrtc
+ARM GAS  /tmp/ccMmEYxw.s 			page 21
+
+
+ 727 0030 00280040 		.word	1073752064
+ 728              		.cfi_endproc
+ 729              	.LFE138:
+ 731              		.section	.text.UART2_Init,"ax",%progbits
+ 732              		.align	1
+ 733              		.global	UART2_Init
+ 734              		.syntax unified
+ 735              		.thumb
+ 736              		.thumb_func
+ 738              	UART2_Init:
+ 739              	.LFB141:
+ 264:Core/Src/main_app.c ****   huart2.Instance = USART2;
+ 740              		.loc 1 264 1 view -0
+ 741              		.cfi_startproc
+ 742              		@ args = 0, pretend = 0, frame = 0
+ 743              		@ frame_needed = 0, uses_anonymous_args = 0
+ 744 0000 08B5     		push	{r3, lr}
+ 745              	.LCFI23:
+ 746              		.cfi_def_cfa_offset 8
+ 747              		.cfi_offset 3, -8
+ 748              		.cfi_offset 14, -4
+ 265:Core/Src/main_app.c ****   huart2.Init.BaudRate =115200;
+ 749              		.loc 1 265 3 view .LVU193
+ 265:Core/Src/main_app.c ****   huart2.Init.BaudRate =115200;
+ 750              		.loc 1 265 19 is_stmt 0 view .LVU194
+ 751 0002 0948     		ldr	r0, .L46
+ 752 0004 094B     		ldr	r3, .L46+4
+ 753 0006 0360     		str	r3, [r0]
+ 266:Core/Src/main_app.c ****   huart2.Init.WordLength = UART_WORDLENGTH_8B;
+ 754              		.loc 1 266 3 is_stmt 1 view .LVU195
+ 266:Core/Src/main_app.c ****   huart2.Init.WordLength = UART_WORDLENGTH_8B;
+ 755              		.loc 1 266 24 is_stmt 0 view .LVU196
+ 756 0008 4FF4E133 		mov	r3, #115200
+ 757 000c 4360     		str	r3, [r0, #4]
+ 267:Core/Src/main_app.c ****   huart2.Init.StopBits = UART_STOPBITS_1;
+ 758              		.loc 1 267 3 is_stmt 1 view .LVU197
+ 267:Core/Src/main_app.c ****   huart2.Init.StopBits = UART_STOPBITS_1;
+ 759              		.loc 1 267 26 is_stmt 0 view .LVU198
+ 760 000e 0023     		movs	r3, #0
+ 761 0010 8360     		str	r3, [r0, #8]
+ 268:Core/Src/main_app.c ****   huart2.Init.Parity = UART_PARITY_NONE;
+ 762              		.loc 1 268 3 is_stmt 1 view .LVU199
+ 268:Core/Src/main_app.c ****   huart2.Init.Parity = UART_PARITY_NONE;
+ 763              		.loc 1 268 24 is_stmt 0 view .LVU200
+ 764 0012 C360     		str	r3, [r0, #12]
+ 269:Core/Src/main_app.c ****   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 765              		.loc 1 269 3 is_stmt 1 view .LVU201
+ 269:Core/Src/main_app.c ****   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 766              		.loc 1 269 22 is_stmt 0 view .LVU202
+ 767 0014 0361     		str	r3, [r0, #16]
+ 270:Core/Src/main_app.c ****   huart2.Init.Mode = UART_MODE_TX;
+ 768              		.loc 1 270 3 is_stmt 1 view .LVU203
+ 270:Core/Src/main_app.c ****   huart2.Init.Mode = UART_MODE_TX;
+ 769              		.loc 1 270 25 is_stmt 0 view .LVU204
+ 770 0016 8361     		str	r3, [r0, #24]
+ 271:Core/Src/main_app.c **** 
+ 771              		.loc 1 271 3 is_stmt 1 view .LVU205
+ARM GAS  /tmp/ccMmEYxw.s 			page 22
+
+
+ 271:Core/Src/main_app.c **** 
+ 772              		.loc 1 271 20 is_stmt 0 view .LVU206
+ 773 0018 0823     		movs	r3, #8
+ 774 001a 4361     		str	r3, [r0, #20]
+ 273:Core/Src/main_app.c ****   {
+ 775              		.loc 1 273 3 is_stmt 1 view .LVU207
+ 273:Core/Src/main_app.c ****   {
+ 776              		.loc 1 273 8 is_stmt 0 view .LVU208
+ 777 001c FFF7FEFF 		bl	HAL_UART_Init
+ 778              	.LVL39:
+ 273:Core/Src/main_app.c ****   {
+ 779              		.loc 1 273 6 discriminator 1 view .LVU209
+ 780 0020 00B9     		cbnz	r0, .L45
+ 278:Core/Src/main_app.c **** 
+ 781              		.loc 1 278 1 view .LVU210
+ 782 0022 08BD     		pop	{r3, pc}
+ 783              	.L45:
+ 276:Core/Src/main_app.c ****   }
+ 784              		.loc 1 276 5 is_stmt 1 view .LVU211
+ 785 0024 FFF7FEFF 		bl	Error_handler
+ 786              	.LVL40:
+ 787              	.L47:
+ 788              		.align	2
+ 789              	.L46:
+ 790 0028 00000000 		.word	huart2
+ 791 002c 00440040 		.word	1073759232
+ 792              		.cfi_endproc
+ 793              	.LFE141:
+ 795              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 796              		.align	2
+ 797              	.LC11:
+ 798 0000 54686973 		.ascii	"This is RTC calendar Test program\015\012\000"
+ 798      20697320 
+ 798      52544320 
+ 798      63616C65 
+ 798      6E646172 
+ 799              		.align	2
+ 800              	.LC12:
+ 801 0024 576F6B65 		.ascii	"Woke up from STANDBY\015\012\000"
+ 801      20757020 
+ 801      66726F6D 
+ 801      20535441 
+ 801      4E444259 
+ 802 003b 00       		.align	2
+ 803              	.LC13:
+ 804 003c 57656E74 		.ascii	"Went to STANDBY mode\015\012\000"
+ 804      20746F20 
+ 804      5354414E 
+ 804      44425920 
+ 804      6D6F6465 
+ 805              		.section	.text.main,"ax",%progbits
+ 806              		.align	1
+ 807              		.global	main
+ 808              		.syntax unified
+ 809              		.thumb
+ 810              		.thumb_func
+ 812              	main:
+ARM GAS  /tmp/ccMmEYxw.s 			page 23
+
+
+ 813              	.LFB136:
+  47:Core/Src/main_app.c ****   HAL_Init();
+ 814              		.loc 1 47 1 view -0
+ 815              		.cfi_startproc
+ 816              		@ Volatile: function does not return.
+ 817              		@ args = 0, pretend = 0, frame = 8
+ 818              		@ frame_needed = 0, uses_anonymous_args = 0
+ 819 0000 00B5     		push	{lr}
+ 820              	.LCFI24:
+ 821              		.cfi_def_cfa_offset 4
+ 822              		.cfi_offset 14, -4
+ 823 0002 83B0     		sub	sp, sp, #12
+ 824              	.LCFI25:
+ 825              		.cfi_def_cfa_offset 16
+  48:Core/Src/main_app.c ****   GPIO_Init();
+ 826              		.loc 1 48 3 view .LVU213
+ 827 0004 FFF7FEFF 		bl	HAL_Init
+ 828              	.LVL41:
+  49:Core/Src/main_app.c ****   SystemClock_Config_HSE(SYS_CLOCK_FREQ_50_MHZ);
+ 829              		.loc 1 49 3 view .LVU214
+ 830 0008 FFF7FEFF 		bl	GPIO_Init
+ 831              	.LVL42:
+  50:Core/Src/main_app.c ****   UART2_Init();
+ 832              		.loc 1 50 3 view .LVU215
+ 833 000c 3220     		movs	r0, #50
+ 834 000e FFF7FEFF 		bl	SystemClock_Config_HSE
+ 835              	.LVL43:
+  51:Core/Src/main_app.c ****   RTC_Init();
+ 836              		.loc 1 51 3 view .LVU216
+ 837 0012 FFF7FEFF 		bl	UART2_Init
+ 838              	.LVL44:
+  52:Core/Src/main_app.c **** 
+ 839              		.loc 1 52 3 view .LVU217
+ 840 0016 FFF7FEFF 		bl	RTC_Init
+ 841              	.LVL45:
+  54:Core/Src/main_app.c **** 
+ 842              		.loc 1 54 3 view .LVU218
+ 843 001a 1948     		ldr	r0, .L53
+ 844 001c FFF7FEFF 		bl	printmsg
+ 845              	.LVL46:
+  56:Core/Src/main_app.c ****   {
+ 846              		.loc 1 56 3 view .LVU219
+  56:Core/Src/main_app.c ****   {
+ 847              		.loc 1 56 6 is_stmt 0 view .LVU220
+ 848 0020 184B     		ldr	r3, .L53+4
+ 849 0022 1B69     		ldr	r3, [r3, #16]
+  56:Core/Src/main_app.c ****   {
+ 850              		.loc 1 56 5 view .LVU221
+ 851 0024 13F4807F 		tst	r3, #256
+ 852 0028 1CD1     		bne	.L52
+ 853              	.L49:
+  77:Core/Src/main_app.c **** 
+ 854              		.loc 1 77 5 is_stmt 1 view .LVU222
+ 855              	.LBB4:
+  77:Core/Src/main_app.c **** 
+ 856              		.loc 1 77 5 view .LVU223
+  77:Core/Src/main_app.c **** 
+ARM GAS  /tmp/ccMmEYxw.s 			page 24
+
+
+ 857              		.loc 1 77 5 view .LVU224
+ 858 002a 174B     		ldr	r3, .L53+8
+ 859 002c 9A6D     		ldr	r2, [r3, #88]
+ 860 002e 42F08052 		orr	r2, r2, #268435456
+ 861 0032 9A65     		str	r2, [r3, #88]
+  77:Core/Src/main_app.c **** 
+ 862              		.loc 1 77 5 view .LVU225
+ 863 0034 9B6D     		ldr	r3, [r3, #88]
+ 864 0036 03F08053 		and	r3, r3, #268435456
+ 865 003a 0193     		str	r3, [sp, #4]
+  77:Core/Src/main_app.c **** 
+ 866              		.loc 1 77 5 view .LVU226
+ 867 003c 019B     		ldr	r3, [sp, #4]
+ 868              	.LBE4:
+  77:Core/Src/main_app.c **** 
+ 869              		.loc 1 77 5 view .LVU227
+  80:Core/Src/main_app.c **** 
+ 870              		.loc 1 80 5 view .LVU228
+ 871 003e 114B     		ldr	r3, .L53+4
+ 872 0040 1F22     		movs	r2, #31
+ 873 0042 9A61     		str	r2, [r3, #24]
+  84:Core/Src/main_app.c ****     HAL_PWREx_EnablePullUpPullDownConfig();
+ 874              		.loc 1 84 5 view .LVU229
+ 875 0044 4FF40051 		mov	r1, #8192
+ 876 0048 0220     		movs	r0, #2
+ 877 004a FFF7FEFF 		bl	HAL_PWREx_EnableGPIOPullUp
+ 878              	.LVL47:
+  85:Core/Src/main_app.c **** 
+ 879              		.loc 1 85 5 view .LVU230
+ 880 004e FFF7FEFF 		bl	HAL_PWREx_EnablePullUpPullDownConfig
+ 881              	.LVL48:
+  89:Core/Src/main_app.c **** 
+ 882              		.loc 1 89 5 view .LVU231
+ 883 0052 4220     		movs	r0, #66
+ 884 0054 FFF7FEFF 		bl	HAL_PWR_EnableWakeUpPin
+ 885              	.LVL49:
+  91:Core/Src/main_app.c **** 
+ 886              		.loc 1 91 5 view .LVU232
+ 887 0058 0C48     		ldr	r0, .L53+12
+ 888 005a FFF7FEFF 		bl	printmsg
+ 889              	.LVL50:
+  94:Core/Src/main_app.c ****     
+ 890              		.loc 1 94 5 view .LVU233
+ 891 005e FFF7FEFF 		bl	HAL_PWR_EnterSTANDBYMode
+ 892              	.LVL51:
+ 893              	.L50:
+  96:Core/Src/main_app.c **** 
+ 894              		.loc 1 96 5 view .LVU234
+  96:Core/Src/main_app.c **** 
+ 895              		.loc 1 96 10 view .LVU235
+ 896 0062 FEE7     		b	.L50
+ 897              	.L52:
+  58:Core/Src/main_app.c ****     __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+ 898              		.loc 1 58 5 view .LVU236
+ 899 0064 074B     		ldr	r3, .L53+4
+ 900 0066 4FF48072 		mov	r2, #256
+ 901 006a 9A61     		str	r2, [r3, #24]
+ARM GAS  /tmp/ccMmEYxw.s 			page 25
+
+
+  59:Core/Src/main_app.c ****     printmsg("Woke up from STANDBY\r\n");
+ 902              		.loc 1 59 5 view .LVU237
+ 903 006c 1F22     		movs	r2, #31
+ 904 006e 9A61     		str	r2, [r3, #24]
+  60:Core/Src/main_app.c ****     HAL_GPIO_EXTI_Callback(0);
+ 905              		.loc 1 60 5 view .LVU238
+ 906 0070 0748     		ldr	r0, .L53+16
+ 907 0072 FFF7FEFF 		bl	printmsg
+ 908              	.LVL52:
+  61:Core/Src/main_app.c ****   }
+ 909              		.loc 1 61 5 view .LVU239
+ 910 0076 0020     		movs	r0, #0
+ 911 0078 FFF7FEFF 		bl	HAL_GPIO_EXTI_Callback
+ 912              	.LVL53:
+ 913 007c D5E7     		b	.L49
+ 914              	.L54:
+ 915 007e 00BF     		.align	2
+ 916              	.L53:
+ 917 0080 00000000 		.word	.LC11
+ 918 0084 00700040 		.word	1073770496
+ 919 0088 00100240 		.word	1073876992
+ 920 008c 3C000000 		.word	.LC13
+ 921 0090 24000000 		.word	.LC12
+ 922              		.cfi_endproc
+ 923              	.LFE136:
+ 925              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 926              		.align	2
+ 927              	.LC0:
+ 928 0000 4D6F6E64 		.ascii	"Monday\000"
+ 928      617900
+ 929 0007 00       		.align	2
+ 930              	.LC1:
+ 931 0008 54756573 		.ascii	"TuesDay\000"
+ 931      44617900 
+ 932              		.align	2
+ 933              	.LC2:
+ 934 0010 5765646E 		.ascii	"Wednesday\000"
+ 934      65736461 
+ 934      7900
+ 935 001a 0000     		.align	2
+ 936              	.LC3:
+ 937 001c 54687572 		.ascii	"Thursday\000"
+ 937      73646179 
+ 937      00
+ 938 0025 000000   		.align	2
+ 939              	.LC4:
+ 940 0028 46726964 		.ascii	"Friday\000"
+ 940      617900
+ 941 002f 00       		.align	2
+ 942              	.LC5:
+ 943 0030 53617475 		.ascii	"Saturday\000"
+ 943      72646179 
+ 943      00
+ 944 0039 000000   		.align	2
+ 945              	.LC6:
+ 946 003c 53756E64 		.ascii	"Sunday\000"
+ 946      617900
+ARM GAS  /tmp/ccMmEYxw.s 			page 26
+
+
+ 947              		.global	hrtc
+ 948              		.section	.bss.hrtc,"aw",%nobits
+ 949              		.align	2
+ 952              	hrtc:
+ 953 0000 00000000 		.space	36
+ 953      00000000 
+ 953      00000000 
+ 953      00000000 
+ 953      00000000 
+ 954              		.global	huart2
+ 955              		.section	.bss.huart2,"aw",%nobits
+ 956              		.align	2
+ 959              	huart2:
+ 960 0000 00000000 		.space	136
+ 960      00000000 
+ 960      00000000 
+ 960      00000000 
+ 960      00000000 
+ 961              		.section	.rodata
+ 962              		.align	2
+ 963              		.set	.LANCHOR0,. + 0
+ 964              	.LC8:
+ 965 0000 00000000 		.word	.LC0
+ 966 0004 08000000 		.word	.LC1
+ 967 0008 10000000 		.word	.LC2
+ 968 000c 1C000000 		.word	.LC3
+ 969 0010 28000000 		.word	.LC4
+ 970 0014 30000000 		.word	.LC5
+ 971 0018 3C000000 		.word	.LC6
+ 972              		.text
+ 973              	.Letext0:
+ 974              		.file 2 "/usr/lib/gcc/arm-none-eabi/15.2.0/include/stddef.h"
+ 975              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 976              		.file 4 "/usr/lib/gcc/arm-none-eabi/15.2.0/include/stdarg.h"
+ 977              		.file 5 "/usr/arm-none-eabi/include/stdio.h"
+ 978              		.file 6 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 979              		.file 7 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h"
+ 980              		.file 8 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h"
+ 981              		.file 9 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 982              		.file 10 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h"
+ 983              		.file 11 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 984              		.file 12 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 985              		.file 13 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h"
+ 986              		.file 14 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 987              		.file 15 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
+ 988              		.file 16 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h"
+ 989              		.file 17 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h"
+ 990              		.file 18 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 991              		.file 19 "/usr/arm-none-eabi/include/string.h"
+ 992              		.file 20 "<built-in>"
+ARM GAS  /tmp/ccMmEYxw.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main_app.c
+     /tmp/ccMmEYxw.s:21     .text.printmsg:00000000 $t
+     /tmp/ccMmEYxw.s:27     .text.printmsg:00000000 printmsg
+     /tmp/ccMmEYxw.s:95     .text.printmsg:00000034 $d
+     /tmp/ccMmEYxw.s:959    .bss.huart2:00000000 huart2
+     /tmp/ccMmEYxw.s:100    .text.RTC_CalendarConfig:00000000 $t
+     /tmp/ccMmEYxw.s:106    .text.RTC_CalendarConfig:00000000 RTC_CalendarConfig
+     /tmp/ccMmEYxw.s:176    .text.RTC_CalendarConfig:00000050 $d
+     /tmp/ccMmEYxw.s:952    .bss.hrtc:00000000 hrtc
+     /tmp/ccMmEYxw.s:181    .text.GPIO_Init:00000000 $t
+     /tmp/ccMmEYxw.s:187    .text.GPIO_Init:00000000 GPIO_Init
+     /tmp/ccMmEYxw.s:285    .text.GPIO_Init:0000006c $d
+     /tmp/ccMmEYxw.s:291    .text.getDayofweek:00000000 $t
+     /tmp/ccMmEYxw.s:297    .text.getDayofweek:00000000 getDayofweek
+     /tmp/ccMmEYxw.s:342    .text.getDayofweek:00000030 $d
+     /tmp/ccMmEYxw.s:347    .rodata.HAL_GPIO_EXTI_Callback.str1.4:00000000 $d
+     /tmp/ccMmEYxw.s:354    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+     /tmp/ccMmEYxw.s:360    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+     /tmp/ccMmEYxw.s:431    .text.HAL_GPIO_EXTI_Callback:00000054 $d
+     /tmp/ccMmEYxw.s:438    .text.Error_handler:00000000 $t
+     /tmp/ccMmEYxw.s:444    .text.Error_handler:00000000 Error_handler
+     /tmp/ccMmEYxw.s:460    .text.SystemClock_Config_HSE:00000000 $t
+     /tmp/ccMmEYxw.s:466    .text.SystemClock_Config_HSE:00000000 SystemClock_Config_HSE
+     /tmp/ccMmEYxw.s:661    .text.SystemClock_Config_HSE:000000ac $d
+     /tmp/ccMmEYxw.s:666    .text.RTC_Init:00000000 $t
+     /tmp/ccMmEYxw.s:672    .text.RTC_Init:00000000 RTC_Init
+     /tmp/ccMmEYxw.s:726    .text.RTC_Init:0000002c $d
+     /tmp/ccMmEYxw.s:732    .text.UART2_Init:00000000 $t
+     /tmp/ccMmEYxw.s:738    .text.UART2_Init:00000000 UART2_Init
+     /tmp/ccMmEYxw.s:790    .text.UART2_Init:00000028 $d
+     /tmp/ccMmEYxw.s:796    .rodata.main.str1.4:00000000 $d
+     /tmp/ccMmEYxw.s:806    .text.main:00000000 $t
+     /tmp/ccMmEYxw.s:812    .text.main:00000000 main
+     /tmp/ccMmEYxw.s:917    .text.main:00000080 $d
+     /tmp/ccMmEYxw.s:926    .rodata.str1.4:00000000 $d
+     /tmp/ccMmEYxw.s:949    .bss.hrtc:00000000 $d
+     /tmp/ccMmEYxw.s:956    .bss.huart2:00000000 $d
+     /tmp/ccMmEYxw.s:962    .rodata:00000000 $d
+
+UNDEFINED SYMBOLS
+vsprintf
+strlen
+HAL_UART_Transmit
+HAL_RTC_SetTime
+HAL_RTC_SetDate
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_RTC_GetTime
+HAL_RTC_GetDate
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_RCC_GetHCLKFreq
+HAL_SYSTICK_Config
+HAL_SYSTICK_CLKSourceConfig
+HAL_RTC_Init
+ARM GAS  /tmp/ccMmEYxw.s 			page 28
+
+
+HAL_UART_Init
+HAL_Init
+HAL_PWREx_EnableGPIOPullUp
+HAL_PWREx_EnablePullUpPullDownConfig
+HAL_PWR_EnableWakeUpPin
+HAL_PWR_EnterSTANDBYMode

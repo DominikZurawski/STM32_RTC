@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "STM32L476",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Drivers/STM32L4xx_HAL_Driver/Inc",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32L4xx/Include",
+                "${workspaceFolder}/Drivers/CMSIS/Include"
+            ],
+            "defines": [
+                "STM32L476xx",
+                "USE_HAL_DRIVER"
+            ],
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "linux-gcc-arm"
+        }
+    ],
+    "version": 4
+}

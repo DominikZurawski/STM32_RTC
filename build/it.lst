@@ -1,0 +1,123 @@
+ARM GAS  /tmp/ccNZXWvx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"it.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/it.c"
+  20              		.section	.text.SysTick_Handler,"ax",%progbits
+  21              		.align	1
+  22              		.global	SysTick_Handler
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	SysTick_Handler:
+  28              	.LFB132:
+   1:Core/Src/it.c **** /*
+   2:Core/Src/it.c ****  * it.c
+   3:Core/Src/it.c ****  *
+   4:Core/Src/it.c ****  *  Created on: 02-Jun-2018
+   5:Core/Src/it.c ****  *      Author: kiran
+   6:Core/Src/it.c ****  */
+   7:Core/Src/it.c **** 
+   8:Core/Src/it.c **** #include "main_app.h"
+   9:Core/Src/it.c **** 
+  10:Core/Src/it.c **** /**
+  11:Core/Src/it.c ****   * @brief This function handles System tick timer.
+  12:Core/Src/it.c ****   */
+  13:Core/Src/it.c **** void SysTick_Handler (void)
+  14:Core/Src/it.c **** {
+  29              		.loc 1 14 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  15:Core/Src/it.c **** 	HAL_IncTick();
+  38              		.loc 1 15 2 view .LVU1
+  39 0002 FFF7FEFF 		bl	HAL_IncTick
+  40              	.LVL0:
+  16:Core/Src/it.c **** 	HAL_SYSTICK_IRQHandler();
+  41              		.loc 1 16 2 view .LVU2
+  42 0006 FFF7FEFF 		bl	HAL_SYSTICK_IRQHandler
+ARM GAS  /tmp/ccNZXWvx.s 			page 2
+
+
+  43              	.LVL1:
+  17:Core/Src/it.c **** }
+  44              		.loc 1 17 1 is_stmt 0 view .LVU3
+  45 000a 08BD     		pop	{r3, pc}
+  46              		.cfi_endproc
+  47              	.LFE132:
+  49              		.section	.text.EXTI15_10_IRQHandler,"ax",%progbits
+  50              		.align	1
+  51              		.global	EXTI15_10_IRQHandler
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  56              	EXTI15_10_IRQHandler:
+  57              	.LFB133:
+  18:Core/Src/it.c **** 
+  19:Core/Src/it.c **** /**
+  20:Core/Src/it.c ****   * @brief This function handles EXTI line[15:10] interrupts.
+  21:Core/Src/it.c ****   */
+  22:Core/Src/it.c **** void EXTI15_10_IRQHandler(void)
+  23:Core/Src/it.c **** {
+  58              		.loc 1 23 1 is_stmt 1 view -0
+  59              		.cfi_startproc
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62 0000 08B5     		push	{r3, lr}
+  63              	.LCFI1:
+  64              		.cfi_def_cfa_offset 8
+  65              		.cfi_offset 3, -8
+  66              		.cfi_offset 14, -4
+  24:Core/Src/it.c **** 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  67              		.loc 1 24 2 view .LVU5
+  68 0002 4FF40050 		mov	r0, #8192
+  69 0006 FFF7FEFF 		bl	HAL_GPIO_EXTI_IRQHandler
+  70              	.LVL2:
+  25:Core/Src/it.c **** }
+  71              		.loc 1 25 1 is_stmt 0 view .LVU6
+  72 000a 08BD     		pop	{r3, pc}
+  73              		.cfi_endproc
+  74              	.LFE133:
+  76              		.text
+  77              	.Letext0:
+  78              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  79              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  80              		.file 4 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
+  81              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+  82              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ARM GAS  /tmp/ccNZXWvx.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 it.c
+     /tmp/ccNZXWvx.s:21     .text.SysTick_Handler:00000000 $t
+     /tmp/ccNZXWvx.s:27     .text.SysTick_Handler:00000000 SysTick_Handler
+     /tmp/ccNZXWvx.s:50     .text.EXTI15_10_IRQHandler:00000000 $t
+     /tmp/ccNZXWvx.s:56     .text.EXTI15_10_IRQHandler:00000000 EXTI15_10_IRQHandler
+
+UNDEFINED SYMBOLS
+HAL_IncTick
+HAL_SYSTICK_IRQHandler
+HAL_GPIO_EXTI_IRQHandler

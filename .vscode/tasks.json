@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Firmware",
+            "type": "shell",
+            "command": "make",
+            "args": ["-j4", "all"], 
+            "group": {
+                "kind": "build",
+                "isDefault": true 
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Kompiluje projekt przy użyciu Make"
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash Firmware",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "interface/stlink.cfg",
+                "-f", "target/stm32l4x.cfg",
+                "-c", "transport select hla_swd",
+                "-c", "reset_config srst_only srst_nogate connect_assert_srst",
+                "-c", "program build/RTC_Date_Time.elf verify reset exit" 
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "dependsOn": "Build Firmware" 
+        }
+    ]
+}

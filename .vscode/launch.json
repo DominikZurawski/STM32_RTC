@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/RTC_Date_Time.elf",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32l4x.cfg"
+            ],
+            "openOCDLaunchCommands": [
+                "transport select hla_swd",
+                "reset_config srst_only srst_nogate connect_assert_srst"
+            ],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "gdbPath": "/usr/bin/arm-none-eabi-gdb"
+        }
+    ]
+}

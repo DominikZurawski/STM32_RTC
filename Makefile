@@ -36,9 +36,9 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/stm32l4xx_it.c \
-Core/Src/stm32l4xx_hal_msp.c \
+Core/Src/main_app.c \
+Core/Src/it.c \
+Core/Src/msp.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rtc.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rtc_ex.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
