@@ -52,6 +52,34 @@ int main(void)
   UART2_Init();
   RTC_Init();
 
+  //Enable clock for PWR Controller block
+  __HAL_RCC_PWR_CLK_ENABLE();
+
+  if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
+  {
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+    __HAL_RTC_ALARM_CLEAR_FLAG(&hrtc,RTC_FLAG_ALRAF);
+
+    printmsg("Woke up from standby mode\r\n");
+
+    RTC_TimeTypeDef  RTC_TimeRead;
+    RTC_DateTypeDef RTC_DateRead;
+
+    HAL_RTC_GetTime(&hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc,&RTC_DateRead,RTC_FORMAT_BIN);
+
+    printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
+    RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
+
+    //Buzzer and LED Code
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+    HAL_Delay(2000);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET);
+  }
+
   printmsg("This is RTC Alarm Test program\r\n");
 
   while(1);
@@ -258,20 +286,32 @@ char* getDayofweek(uint8_t number)
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  RTC_TimeTypeDef RTC_TimeRead;
-  RTC_DateTypeDef RTC_DateRead;
+   RTC_TimeTypeDef RTC_TimeRead;
+   RTC_DateTypeDef RTC_DateRead;
 
-  HAL_RTC_GetTime(&hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
-  HAL_RTC_GetDate(&hrtc,&RTC_DateRead,RTC_FORMAT_BIN);
+   RTC_CalendarConfig();
 
-  RTC_CalendarConfig();
+   HAL_RTC_GetTime(&hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
 
-  printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
-     RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
-  printmsg("Current Date is : %02d-%2d-%2d  <%s> \r\n",RTC_DateRead.Month,RTC_DateRead.Date,\
-     RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+   HAL_RTC_GetDate(&hrtc,&RTC_DateRead,RTC_FORMAT_BIN);
 
-  RTC_AlarmConfig();
+   printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
+       RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
+   printmsg("Current Date is : %02d-%2d-%2d  <%s> \r\n",RTC_DateRead.Month,RTC_DateRead.Date,\
+       RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+
+   //make sure that WUF and RTC alarm A flag are cleared
+   __HAL_RTC_ALARM_CLEAR_FLAG(&hrtc,RTC_FLAG_ALRAF);
+   __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+
+
+   RTC_AlarmConfig();
+
+
+   printmsg("Went to STANDBY mode\r\n");
+
+   //Go to standby mode
+   HAL_PWR_EnterSTANDBYMode();
 }
 
 /**
