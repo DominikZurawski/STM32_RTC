@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccNZXWvx.s 			page 1
+ARM GAS  /tmp/cc0LBBgc.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -37,12 +37,14 @@ ARM GAS  /tmp/ccNZXWvx.s 			page 1
    7:Core/Src/it.c **** 
    8:Core/Src/it.c **** #include "main_app.h"
    9:Core/Src/it.c **** 
-  10:Core/Src/it.c **** /**
-  11:Core/Src/it.c ****   * @brief This function handles System tick timer.
-  12:Core/Src/it.c ****   */
-  13:Core/Src/it.c **** void SysTick_Handler (void)
-  14:Core/Src/it.c **** {
-  29              		.loc 1 14 1 view -0
+  10:Core/Src/it.c **** extern RTC_HandleTypeDef hrtc;
+  11:Core/Src/it.c **** 
+  12:Core/Src/it.c **** /**
+  13:Core/Src/it.c ****   * @brief This function handles System tick timer.
+  14:Core/Src/it.c ****   */
+  15:Core/Src/it.c **** void SysTick_Handler (void)
+  16:Core/Src/it.c **** {
+  29              		.loc 1 16 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 0
   32              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -51,19 +53,19 @@ ARM GAS  /tmp/ccNZXWvx.s 			page 1
   35              		.cfi_def_cfa_offset 8
   36              		.cfi_offset 3, -8
   37              		.cfi_offset 14, -4
-  15:Core/Src/it.c **** 	HAL_IncTick();
-  38              		.loc 1 15 2 view .LVU1
+  17:Core/Src/it.c **** 	HAL_IncTick();
+  38              		.loc 1 17 2 view .LVU1
   39 0002 FFF7FEFF 		bl	HAL_IncTick
   40              	.LVL0:
-  16:Core/Src/it.c **** 	HAL_SYSTICK_IRQHandler();
-  41              		.loc 1 16 2 view .LVU2
+  18:Core/Src/it.c **** 	HAL_SYSTICK_IRQHandler();
+ARM GAS  /tmp/cc0LBBgc.s 			page 2
+
+
+  41              		.loc 1 18 2 view .LVU2
   42 0006 FFF7FEFF 		bl	HAL_SYSTICK_IRQHandler
-ARM GAS  /tmp/ccNZXWvx.s 			page 2
-
-
   43              	.LVL1:
-  17:Core/Src/it.c **** }
-  44              		.loc 1 17 1 is_stmt 0 view .LVU3
+  19:Core/Src/it.c **** }
+  44              		.loc 1 19 1 is_stmt 0 view .LVU3
   45 000a 08BD     		pop	{r3, pc}
   46              		.cfi_endproc
   47              	.LFE132:
@@ -75,13 +77,13 @@ ARM GAS  /tmp/ccNZXWvx.s 			page 1
   54              		.thumb_func
   56              	EXTI15_10_IRQHandler:
   57              	.LFB133:
-  18:Core/Src/it.c **** 
-  19:Core/Src/it.c **** /**
-  20:Core/Src/it.c ****   * @brief This function handles EXTI line[15:10] interrupts.
-  21:Core/Src/it.c ****   */
-  22:Core/Src/it.c **** void EXTI15_10_IRQHandler(void)
-  23:Core/Src/it.c **** {
-  58              		.loc 1 23 1 is_stmt 1 view -0
+  20:Core/Src/it.c **** 
+  21:Core/Src/it.c **** /**
+  22:Core/Src/it.c ****   * @brief This function handles EXTI line[15:10] interrupts.
+  23:Core/Src/it.c ****   */
+  24:Core/Src/it.c **** void EXTI15_10_IRQHandler(void)
+  25:Core/Src/it.c **** {
+  58              		.loc 1 25 1 is_stmt 1 view -0
   59              		.cfi_startproc
   60              		@ args = 0, pretend = 0, frame = 0
   61              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -90,34 +92,79 @@ ARM GAS  /tmp/ccNZXWvx.s 			page 1
   64              		.cfi_def_cfa_offset 8
   65              		.cfi_offset 3, -8
   66              		.cfi_offset 14, -4
-  24:Core/Src/it.c **** 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-  67              		.loc 1 24 2 view .LVU5
+  26:Core/Src/it.c **** 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  67              		.loc 1 26 2 view .LVU5
   68 0002 4FF40050 		mov	r0, #8192
   69 0006 FFF7FEFF 		bl	HAL_GPIO_EXTI_IRQHandler
   70              	.LVL2:
-  25:Core/Src/it.c **** }
-  71              		.loc 1 25 1 is_stmt 0 view .LVU6
+  27:Core/Src/it.c **** }
+  71              		.loc 1 27 1 is_stmt 0 view .LVU6
   72 000a 08BD     		pop	{r3, pc}
   73              		.cfi_endproc
   74              	.LFE133:
-  76              		.text
-  77              	.Letext0:
-  78              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
-  79              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
-  80              		.file 4 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
-  81              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
-  82              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
-ARM GAS  /tmp/ccNZXWvx.s 			page 3
+  76              		.section	.text.RTC_Alarm_IRQHandler,"ax",%progbits
+  77              		.align	1
+  78              		.global	RTC_Alarm_IRQHandler
+  79              		.syntax unified
+  80              		.thumb
+  81              		.thumb_func
+  83              	RTC_Alarm_IRQHandler:
+  84              	.LFB134:
+  28:Core/Src/it.c **** 
+  29:Core/Src/it.c **** void RTC_Alarm_IRQHandler(void)
+  30:Core/Src/it.c **** {
+  85              		.loc 1 30 1 is_stmt 1 view -0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/cc0LBBgc.s 			page 3
+
+
+  90              	.LCFI2:
+  91              		.cfi_def_cfa_offset 8
+  92              		.cfi_offset 3, -8
+  93              		.cfi_offset 14, -4
+  31:Core/Src/it.c **** 	HAL_RTC_AlarmIRQHandler(&hrtc);
+  94              		.loc 1 31 2 view .LVU8
+  95 0002 0248     		ldr	r0, .L7
+  96 0004 FFF7FEFF 		bl	HAL_RTC_AlarmIRQHandler
+  97              	.LVL3:
+  32:Core/Src/it.c **** }
+  98              		.loc 1 32 1 is_stmt 0 view .LVU9
+  99 0008 08BD     		pop	{r3, pc}
+ 100              	.L8:
+ 101 000a 00BF     		.align	2
+ 102              	.L7:
+ 103 000c 00000000 		.word	hrtc
+ 104              		.cfi_endproc
+ 105              	.LFE134:
+ 107              		.text
+ 108              	.Letext0:
+ 109              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 110              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 111              		.file 4 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h"
+ 112              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 113              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h"
+ 114              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 115              		.file 8 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
+ 116              		.file 9 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ARM GAS  /tmp/cc0LBBgc.s 			page 4
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 it.c
-     /tmp/ccNZXWvx.s:21     .text.SysTick_Handler:00000000 $t
-     /tmp/ccNZXWvx.s:27     .text.SysTick_Handler:00000000 SysTick_Handler
-     /tmp/ccNZXWvx.s:50     .text.EXTI15_10_IRQHandler:00000000 $t
-     /tmp/ccNZXWvx.s:56     .text.EXTI15_10_IRQHandler:00000000 EXTI15_10_IRQHandler
+     /tmp/cc0LBBgc.s:21     .text.SysTick_Handler:00000000 $t
+     /tmp/cc0LBBgc.s:27     .text.SysTick_Handler:00000000 SysTick_Handler
+     /tmp/cc0LBBgc.s:50     .text.EXTI15_10_IRQHandler:00000000 $t
+     /tmp/cc0LBBgc.s:56     .text.EXTI15_10_IRQHandler:00000000 EXTI15_10_IRQHandler
+     /tmp/cc0LBBgc.s:77     .text.RTC_Alarm_IRQHandler:00000000 $t
+     /tmp/cc0LBBgc.s:83     .text.RTC_Alarm_IRQHandler:00000000 RTC_Alarm_IRQHandler
+     /tmp/cc0LBBgc.s:103    .text.RTC_Alarm_IRQHandler:0000000c $d
 
 UNDEFINED SYMBOLS
 HAL_IncTick
 HAL_SYSTICK_IRQHandler
 HAL_GPIO_EXTI_IRQHandler
+HAL_RTC_AlarmIRQHandler
+hrtc

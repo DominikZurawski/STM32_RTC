@@ -17,9 +17,10 @@
 void GPIO_Init(void);
 void Error_handler(void);
 void UART2_Init(void);
-void SystemClock_Config_HSE(uint8_t clock_freq);
+void SystemClock_Config(uint8_t clock_freq);
 void RTC_Init(void);
 void RTC_CalendarConfig(void);
+void RTC_AlarmConfig(void);
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
@@ -47,54 +48,13 @@ int main(void)
 {
   HAL_Init();
   GPIO_Init();
-  SystemClock_Config_HSE(SYS_CLOCK_FREQ_50_MHZ);
+  SystemClock_Config(SYS_CLOCK_FREQ_50_MHZ);
   UART2_Init();
   RTC_Init();
 
-  printmsg("This is RTC calendar Test program\r\n");
+  printmsg("This is RTC Alarm Test program\r\n");
 
-  if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
-  {
-    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
-    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-    printmsg("Woke up from STANDBY\r\n");
-    HAL_GPIO_EXTI_Callback(0);
-  }
-
-  // //RTC_CalendarConfig();
-  // //Enable the wakeup pin 1 in pwr_csr register
-  // // HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1); //Pin A0
-
-  // printmsg("Went to STANDBY mode\r\n");
-  // HAL_PWR_EnterSTANDBYMode();
-
-  // while(1);
-
-
-    // RTC_CalendarConfig(); // Odkomentuj tylko raz, żeby ustawić datę, potem zakomentuj
-
-    // 1. Włącz zegar kontrolera zasilania (PWR)
-    __HAL_RCC_PWR_CLK_ENABLE();
-
-    // 2. Wyczyść flagę wybudzenia, żeby nie obudził się od razu
-    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-
-    // 3. Skonfiguruj rezystor Pull-Up dla PC13, który działa w Standby
-    // (Dzięki temu przycisk będzie działał poprawnie nawet gdy procesor śpi)
-    HAL_PWREx_EnableGPIOPullUp(PWR_GPIO_C, PWR_GPIO_BIT_13);
-    HAL_PWREx_EnablePullUpPullDownConfig();
-
-    // 4. Włącz wybudzanie z pinu PC13 (WKUP2) na stan niski (LOW)
-    // (Bo przycisk na Nucleo zwiera do masy)
-    HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN2_LOW);
-
-    printmsg("Went to STANDBY mode\r\n");
-
-    // 5. Idź spać
-    HAL_PWR_EnterSTANDBYMode();
-    
-    while(1);
-
+  while(1);
 
   return 0;
 }
@@ -103,7 +63,7 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
-void SystemClock_Config_HSE(uint8_t clock_freq)
+void SystemClock_Config(uint8_t clock_freq)
 {
   RCC_OscInitTypeDef osc_init;
   RCC_ClkInitTypeDef clk_init;
@@ -189,7 +149,7 @@ void SystemClock_Config_HSE(uint8_t clock_freq)
 void RTC_Init(void)
 {
   hrtc.Instance = RTC;
-  hrtc.Init.HourFormat =RTC_HOURFORMAT_12;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
   hrtc.Init.AsynchPrediv = 0x7F;
   hrtc.Init.SynchPrediv = 0xFF;
   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
@@ -304,10 +264,59 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   HAL_RTC_GetTime(&hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
   HAL_RTC_GetDate(&hrtc,&RTC_DateRead,RTC_FORMAT_BIN);
 
+  RTC_CalendarConfig();
+
   printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
      RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
   printmsg("Current Date is : %02d-%2d-%2d  <%s> \r\n",RTC_DateRead.Month,RTC_DateRead.Date,\
      RTC_DateRead.Year,getDayofweek(RTC_DateRead.WeekDay));
+
+  RTC_AlarmConfig();
+}
+
+/**
+  * @brief RTC alaram configuration
+  * @param None
+  * @retval None
+  */
+void RTC_AlarmConfig(void)
+{
+  RTC_AlarmTypeDef AlarmA_Set;
+  memset(&AlarmA_Set,0,sizeof(AlarmA_Set));
+  HAL_RTC_DeactivateAlarm(&hrtc,RTC_ALARM_A);
+
+  //xx:45:09
+  AlarmA_Set.Alarm = RTC_ALARM_A;
+  AlarmA_Set.AlarmTime.Minutes = 16;
+  AlarmA_Set.AlarmTime.Seconds = 20;
+  AlarmA_Set.AlarmMask = RTC_ALARMMASK_HOURS | RTC_ALARMMASK_DATEWEEKDAY ;
+  AlarmA_Set.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_NONE;
+  if ( HAL_RTC_SetAlarm_IT(&hrtc, &AlarmA_Set, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_handler();
+  }
+  printmsg("Alarm Set Successful\r\n");
+}
+
+/**
+  * @brief  Alarm A callback.
+  * @param  hrtc pointer to a RTC_HandleTypeDef structure that contains
+  *                the configuration information for RTC.
+  * @retval None
+  */
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+  printmsg("Alarm Triggered \r\n");
+  RTC_TimeTypeDef RTC_TimeRead;
+  HAL_RTC_GetTime(hrtc,&RTC_TimeRead,RTC_FORMAT_BIN);
+  printmsg("Current Time is : %02d:%02d:%02d\r\n",RTC_TimeRead.Hours,\
+  RTC_TimeRead.Minutes,RTC_TimeRead.Seconds);
+
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+  HAL_Delay(2000);
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET);
 }
 
 /**

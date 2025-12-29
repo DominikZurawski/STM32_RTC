@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccoMTZ9o.s 			page 1
+ARM GAS  /tmp/cclbFW0N.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
   19:Core/Src/msp.c ****   //Here will do low level processor specific inits.
   20:Core/Src/msp.c ****   //1. Set up the priority grouping of the arm cortex mx processor
   21:Core/Src/msp.c ****   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-ARM GAS  /tmp/ccoMTZ9o.s 			page 2
+ARM GAS  /tmp/cclbFW0N.s 			page 2
 
 
   38              		.loc 1 21 3 view .LVU1
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
   85              	.LFB133:
   31:Core/Src/msp.c **** 
   32:Core/Src/msp.c **** 
-ARM GAS  /tmp/ccoMTZ9o.s 			page 3
+ARM GAS  /tmp/cclbFW0N.s 			page 3
 
 
   33:Core/Src/msp.c **** /**
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
  125 0020 DB6C     		ldr	r3, [r3, #76]
  126 0022 03F00103 		and	r3, r3, #1
  127 0026 0293     		str	r3, [sp, #8]
-ARM GAS  /tmp/ccoMTZ9o.s 			page 4
+ARM GAS  /tmp/cclbFW0N.s 			page 4
 
 
  128              		.loc 1 47 3 view .LVU22
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
  169              		.loc 1 60 3 view .LVU39
  170 0058 2620     		movs	r0, #38
  171 005a FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
-ARM GAS  /tmp/ccoMTZ9o.s 			page 5
+ARM GAS  /tmp/cclbFW0N.s 			page 5
 
 
  172              	.LVL8:
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
  215              		.loc 1 73 3 view .LVU45
   74:Core/Src/msp.c ****   //1. Turn on the LSE
   75:Core/Src/msp.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
-ARM GAS  /tmp/ccoMTZ9o.s 			page 6
+ARM GAS  /tmp/cclbFW0N.s 			page 6
 
 
  216              		.loc 1 75 3 view .LVU46
@@ -324,7 +324,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
  233 0012 FFF7FEFF 		bl	HAL_RCC_OscConfig
  234              	.LVL12:
  235              		.loc 1 78 5 discriminator 1 view .LVU55
- 236 0016 90B9     		cbnz	r0, .L13
+ 236 0016 D0B9     		cbnz	r0, .L13
  237              	.L10:
   79:Core/Src/msp.c ****   {
   80:Core/Src/msp.c ****     Error_handler();
@@ -348,7 +348,7 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
  249 0026 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
  250              	.LVL13:
  251              		.loc 1 86 5 discriminator 1 view .LVU62
- 252 002a 58B9     		cbnz	r0, .L14
+ 252 002a 98B9     		cbnz	r0, .L14
  253              	.L11:
   87:Core/Src/msp.c ****   {
   88:Core/Src/msp.c ****     Error_handler();
@@ -357,69 +357,86 @@ ARM GAS  /tmp/ccoMTZ9o.s 			page 1
   91:Core/Src/msp.c ****   //3. Enable the RTC Clock
   92:Core/Src/msp.c ****   __HAL_RCC_RTC_ENABLE();
  254              		.loc 1 92 3 is_stmt 1 view .LVU63
- 255 002c 074A     		ldr	r2, .L15
-ARM GAS  /tmp/ccoMTZ9o.s 			page 7
+ 255 002c 0B4A     		ldr	r2, .L15
+ARM GAS  /tmp/cclbFW0N.s 			page 7
 
 
  256 002e D2F89030 		ldr	r3, [r2, #144]
  257 0032 43F40043 		orr	r3, r3, #32768
  258 0036 C2F89030 		str	r3, [r2, #144]
-  93:Core/Src/msp.c **** }
- 259              		.loc 1 93 1 is_stmt 0 view .LVU64
- 260 003a 35B0     		add	sp, sp, #212
- 261              	.LCFI6:
- 262              		.cfi_remember_state
- 263              		.cfi_def_cfa_offset 4
- 264              		@ sp needed
- 265 003c 00BD     		pop	{pc}
- 266              	.L13:
- 267              	.LCFI7:
- 268              		.cfi_restore_state
+  93:Core/Src/msp.c **** 
+  94:Core/Src/msp.c ****   //4. Enable the RTC Alarm IRQ in the NVIC
+  95:Core/Src/msp.c ****   HAL_NVIC_SetPriority(RTC_Alarm_IRQn,15,0);
+ 259              		.loc 1 95 3 view .LVU64
+ 260 003a 0022     		movs	r2, #0
+ 261 003c 0F21     		movs	r1, #15
+ 262 003e 2920     		movs	r0, #41
+ 263 0040 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 264              	.LVL14:
+  96:Core/Src/msp.c ****   HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+ 265              		.loc 1 96 3 view .LVU65
+ 266 0044 2920     		movs	r0, #41
+ 267 0046 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 268              	.LVL15:
+  97:Core/Src/msp.c **** }
+ 269              		.loc 1 97 1 is_stmt 0 view .LVU66
+ 270 004a 35B0     		add	sp, sp, #212
+ 271              	.LCFI6:
+ 272              		.cfi_remember_state
+ 273              		.cfi_def_cfa_offset 4
+ 274              		@ sp needed
+ 275 004c 00BD     		pop	{pc}
+ 276              	.L13:
+ 277              	.LCFI7:
+ 278              		.cfi_restore_state
   80:Core/Src/msp.c ****   }
- 269              		.loc 1 80 5 is_stmt 1 view .LVU65
- 270 003e FFF7FEFF 		bl	Error_handler
- 271              	.LVL14:
- 272 0042 E9E7     		b	.L10
- 273              	.L14:
+ 279              		.loc 1 80 5 is_stmt 1 view .LVU67
+ 280 004e FFF7FEFF 		bl	Error_handler
+ 281              	.LVL16:
+ 282 0052 E1E7     		b	.L10
+ 283              	.L14:
   88:Core/Src/msp.c ****   }
- 274              		.loc 1 88 5 view .LVU66
- 275 0044 FFF7FEFF 		bl	Error_handler
- 276              	.LVL15:
- 277 0048 F0E7     		b	.L11
- 278              	.L16:
- 279 004a 00BF     		.align	2
- 280              	.L15:
- 281 004c 00100240 		.word	1073876992
- 282              		.cfi_endproc
- 283              	.LFE134:
- 285              		.text
- 286              	.Letext0:
- 287              		.file 2 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h"
- 288              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
- 289              		.file 4 "/usr/arm-none-eabi/include/sys/_stdint.h"
- 290              		.file 5 "Drivers/CMSIS/Include/core_cm4.h"
- 291              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
- 292              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h"
- 293              		.file 8 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc_ex.h"
- 294              		.file 9 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
- 295              		.file 10 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
- 296              		.file 11 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h"
- 297              		.file 12 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
- 298              		.file 13 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
-ARM GAS  /tmp/ccoMTZ9o.s 			page 8
+ 284              		.loc 1 88 5 view .LVU68
+ 285 0054 FFF7FEFF 		bl	Error_handler
+ 286              	.LVL17:
+ 287 0058 E8E7     		b	.L11
+ 288              	.L16:
+ 289 005a 00BF     		.align	2
+ 290              	.L15:
+ 291 005c 00100240 		.word	1073876992
+ 292              		.cfi_endproc
+ 293              	.LFE134:
+ 295              		.text
+ 296              	.Letext0:
+ 297              		.file 2 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h"
+ 298              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 299              		.file 4 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 300              		.file 5 "Drivers/CMSIS/Include/core_cm4.h"
+ 301              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 302              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h"
+ 303              		.file 8 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc_ex.h"
+ 304              		.file 9 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 305              		.file 10 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 306              		.file 11 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h"
+ARM GAS  /tmp/cclbFW0N.s 			page 8
+
+
+ 307              		.file 12 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 308              		.file 13 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
+ARM GAS  /tmp/cclbFW0N.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 msp.c
-     /tmp/ccoMTZ9o.s:21     .text.HAL_MspInit:00000000 $t
-     /tmp/ccoMTZ9o.s:27     .text.HAL_MspInit:00000000 HAL_MspInit
-     /tmp/ccoMTZ9o.s:72     .text.HAL_MspInit:00000038 $d
-     /tmp/ccoMTZ9o.s:77     .text.HAL_UART_MspInit:00000000 $t
-     /tmp/ccoMTZ9o.s:83     .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
-     /tmp/ccoMTZ9o.s:188    .text.HAL_UART_MspInit:0000006c $d
-     /tmp/ccoMTZ9o.s:193    .text.HAL_RTC_MspInit:00000000 $t
-     /tmp/ccoMTZ9o.s:199    .text.HAL_RTC_MspInit:00000000 HAL_RTC_MspInit
-     /tmp/ccoMTZ9o.s:281    .text.HAL_RTC_MspInit:0000004c $d
+     /tmp/cclbFW0N.s:21     .text.HAL_MspInit:00000000 $t
+     /tmp/cclbFW0N.s:27     .text.HAL_MspInit:00000000 HAL_MspInit
+     /tmp/cclbFW0N.s:72     .text.HAL_MspInit:00000038 $d
+     /tmp/cclbFW0N.s:77     .text.HAL_UART_MspInit:00000000 $t
+     /tmp/cclbFW0N.s:83     .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+     /tmp/cclbFW0N.s:188    .text.HAL_UART_MspInit:0000006c $d
+     /tmp/cclbFW0N.s:193    .text.HAL_RTC_MspInit:00000000 $t
+     /tmp/cclbFW0N.s:199    .text.HAL_RTC_MspInit:00000000 HAL_RTC_MspInit
+     /tmp/cclbFW0N.s:291    .text.HAL_RTC_MspInit:0000005c $d
 
 UNDEFINED SYMBOLS
 HAL_NVIC_SetPriorityGrouping
